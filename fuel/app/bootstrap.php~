@@ -1,0 +1,21 @@
+<?php
+
+// Bootstrap the framework DO NOT edit this
+require_once COREPATH.'bootstrap.php';
+
+
+Autoloader::add_classes(array(
+	// Add classes you want to override here
+	//'View' => APPPATH.'classes/view.php',
+));
+
+// Register the autoloader
+Autoloader::register();
+
+// Initialize the framework with the config file.
+Fuel::init(include(APPPATH.'config/config.php'));
+
+Fuel::add_path(DOCROOT.'themes'.DS);
+Fuel::add_path(APPPATH.'views'.DS);
+
+/* End of file bootstrap.php */

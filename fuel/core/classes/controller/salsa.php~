@@ -1,0 +1,26 @@
+<?php
+
+namespace Fuel\Core;
+
+abstract class Controller_Salsa extends \Controller {
+
+	public function before()
+	{
+		parent::before();
+		require_once(APPPATH.'vendor'.DS.'pot'.DS.'OTS.php');
+		\Config::load('pot', true);
+		$data = array(
+			'driver'   => POT::DB_MYSQL,
+			'prefix'   => '',
+			'host'     => 'localhost',
+			'user'     => 'root',
+			'password' => '',
+			'database' => 'otserv',
+		);
+		POT::connect(null, $data);
+		//\Config::load('rest', true);
+		
+	}
+}
+
+/* End of file salsa.php */

@@ -1,0 +1,152 @@
+<?php
+
+/**
+ *  Copyright (C) <year>  <name of author>
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+class Controller_Administration extends Controller_Admin {
+	
+	/**
+	 * The index action.
+	 * 
+	 * @access  public
+	 * @return  void
+	 */
+	public function action_index()
+	{
+		$this->response->body = View::factory('welcome/index');
+	}
+
+	public function action_smart()
+	{
+		\Config::load('salsa', true);
+		echo json_encode(Fuel::get_paths());
+		echo '<br>';
+		require_once(APPPATH.'vendor'.DS.'Smarty'.DS.'Smarty.class.php');
+		//Fuel::add_path(DOCROOT.'themes'.DS.Config::get('salsa.theme', 'default').DS);
+		//$data['path'] = 'APPPATH/views/welcome/index.php';
+		Fuel::add_path(APPPATH.'views'.DS);
+		$this->response->body = View::factory('dashboard.smarty');
+		/*$smarty = new Smarty;
+		//$smarty->force_compile = true;
+		$smarty->debugging = false;
+		$smarty->caching = false;
+		$smarty->cache_lifetime = 120;
+
+		$smarty->assign("Name","Fred Irving Johnathan Bradley Peppergill",true);
+		$smarty->assign("FirstName",array("John","Mary","James","Henry"));
+		$smarty->assign("LastName",array("Doe","Smith","Johnson","Case"));
+		$smarty->assign("Class",array(array("A","B","C","D"), array("E", "F", "G", "H"),
+			  array("I", "J", "K", "L"), array("M", "N", "O", "P")));
+
+		$smarty->assign("contacts", array(array("phone" => "1", "fax" => "2", "cell" => "3"),
+			  array("phone" => "555-4444", "fax" => "555-3333", "cell" => "760-1234")));
+
+		$smarty->assign("option_values", array("NY","NE","KS","IA","OK","TX"));
+		$smarty->assign("option_output", array("New York","Nebraska","Kansas","Iowa","Oklahoma","Texas"));
+		$smarty->assign("option_selected", "NE");
+		$smarty->setTemplateDir(APPPATH.'views'.DS);
+
+		$smarty->display('test.smarty');*/
+	}
+
+	/**
+	 * The 404 action for the application.
+	 * 
+	 * @access  public
+	 * @return  void
+	 */
+	public function action_404()
+	{
+		$messages = array('Aw, crap!', 'Bloody Hell!', 'Uh Oh!', 'Nope, not here.', 'Huh?');
+		$data['title'] = $messages[array_rand($messages)];
+
+		// Set a HTTP 404 output header
+		$this->response->status = 404;
+		$this->response->body = View::factory('welcome/404', $data);
+	}
+
+	public function action_pot()
+	{
+
+		try
+		{
+			$info = new OTS_ServerInfo('127.0.0.1', 7171);
+			$status = false;
+		}
+		catch (Error $e)
+		{
+			$status = $info->status();
+		} 
+			
+		echo '<br>status<br>';
+		
+			$data['status'] 	    = false;
+			$data['players_online']     = 'OFF';
+			$data['max_players_online'] = '';
+			$data['monsters']	    = 'OFF';
+
+		if(!$status)
+		{
+			$data['status'] 	    = false;
+			$data['players_online']     = 'OFF';
+			$data['max_players_online'] = '';
+			$data['monsters']	    = 'OFF';
+		}
+		else
+		{
+			$data['status']		    = true;
+			$data['players_online']     = $status->getOnlinePlayers();
+			$data['max_players_online'] = '/'.$status->getMaxPlayers();
+			$data['monsters']	    = $status->getMonstersCount();
+		}
+
+		$now = time();
+		$secs_today = $now - mktime(date("H", $now+3600), date("i", $now), date("s", $now), date("n", 1), date("j", 1), date("Y", 1970));
+		$players = new OTS_Players_List();
+		$filter  = new OTS_SQLFilter();	
+		$filter->compareField('lastlogin', $secs_today, OTS_SQLFilter::OPERATOR_NLOWER);
+		$players->setFilter($filter);
+		$data['players_today'] = count($players);
+		echo $data['players_today'].'<br>';
+
+		$player = new OTS_Player('Player');
+		$data['baseurl'] = 'http://localhost/';
+		$data['themeurl'] = 'http://localhost/';
+		$data['site_name'] = 'ocalhost/';
+		$data['username'] = 'alhost/';
+		$data['msg_num'] = 'alhost/';
+
+
+		echo json_encode($data).'<br>';
+		// checks if player exists
+		if ($player->isLoaded())
+		{
+		    // prints character info
+		    echo 'Player \'' . $player->getName() . '\' has ' . $player->getLevel() . ' level.', "\n";
+
+		    // example of retriving associated objects
+		    echo 'Player \'' . $player->getName() . '\' is member of ' . $player->getGroup()->getName() . ' group.', "\n";
+		}
+		else
+		{
+		    echo 'Player does not exists.', "\n";
+		}
+		Fuel::add_path(APPPATH.'views'.DS);
+		$this->response->body = View::factory('dashboard.twig', $data);
+	}
+}
+
+/* End of file welcome.php */
