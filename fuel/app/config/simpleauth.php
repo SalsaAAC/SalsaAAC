@@ -41,5 +41,5 @@ return array(
 	/**
 	 * Salt for the login hash
 	 */
-	'login_hash_salt' => 'fgdg5^&ruT&U6eYERYH%$WYTHA5EYHdtH%RAHj',
+	'login_hash_salt' => '',
 );

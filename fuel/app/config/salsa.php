@@ -68,7 +68,7 @@ return array(
 		/**
 		 * Database password.
 		 */
-		'password'          => '6ple9lat',
+		'password'          => '',
 
 		/**
 		 * Database name.

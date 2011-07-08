@@ -19,7 +19,7 @@ return array(
 			'hostname'   => 'localhost',
 			'database'   => 'salsa',
 			'username'   => 'root',
-			'password'   => '6ple9lat',
+			'password'   => '',
 			'persistent' => false,
 		),
 		'table_prefix' => '',

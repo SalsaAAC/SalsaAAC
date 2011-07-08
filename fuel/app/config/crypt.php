@@ -11,9 +11,9 @@
  */
 
 return array (
-	'crypto_key' => 'WasHtgQ9UZhIL60jIMTeAc5c',
-	'crypto_iv' => 'Yyc9RUBEA7usKwUVYcKIssiU',
-	'crypto_hmac' => '00wJLIdfszNc4Z84cIY5ElFs',
+	'crypto_key' => '',
+	'crypto_iv' => '',
+	'crypto_hmac' => '',
 );
 
 /* End of file crypt.php */
