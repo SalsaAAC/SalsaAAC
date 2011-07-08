@@ -15,7 +15,6 @@ require COREPATH.'base.php';
 
 // Import the core Fuel class
 import('fuel');
-//require_once COREPATH.'classes'.DIRECTORY_SEPARATOR.'fuel.php';
 
 // If the app does not have a Fuel class, then we need to alias it.
 ( ! class_exists('Fuel')) and class_alias('Fuel\\Core\\Fuel', 'Fuel');

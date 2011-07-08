@@ -164,6 +164,14 @@ class Security {
 
 	public static function htmlentities($value)
 	{
+		static $already_cleaned = array();
+
+		// Prevent looping & encoding twice
+		if (in_array($value, $already_cleaned))
+		{
+			return $value;
+		}
+
 		if (is_string($value))
 		{
 			$value = htmlentities($value, ENT_COMPAT, \Fuel::$encoding, false);
@@ -174,6 +182,9 @@ class Security {
 			{
 				$value[$k] = static::htmlentities($v);
 			}
+
+			// Add to $already_cleaned variable when object
+			is_object($value) and $already_cleaned[] = $value;
 		}
 		elseif (is_object($value))
 		{
@@ -182,6 +193,9 @@ class Security {
 			{
 				if (is_a($value, $class))
 				{
+					// Add to $already_cleaned variable
+					$already_cleaned[] = $value;
+
 					return $value;
 				}
 			}

@@ -2,6 +2,6 @@
 
 return array(
 	'driver' => 'SimpleAuth',
-	'verify_multiple_logins' => true,
-	'salt' => 'v0FMl^2*BdsqZ$mmFILkXL9@fjr6',
+	'verify_multiple_logins' => false,
+	'salt' => 'put_your_salt_here',
 );

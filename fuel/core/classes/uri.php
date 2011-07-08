@@ -103,6 +103,10 @@ class Uri {
 			}
 		}
 
+		// Strip the defined url suffix from the uri if needed
+		$ext = \Config::get('url_suffix');
+		strrchr($uri, '.') === $ext and $uri = substr($uri,0,-strlen($ext));
+
 		// Do some final clean up of the uri
 		static::$detected_uri = str_replace(array('//', '../'), '/', $uri);
 
@@ -149,14 +153,21 @@ class Uri {
 	 */
 	public static function create($uri = null, $variables = array(), $get_variables = array())
 	{
-		$url = \Config::get('base_url');
-
-		if (\Config::get('index_file'))
+		$url = '';
+		
+		if(!preg_match("/^(http|https|ftp):\/\//i", $uri))
 		{
-			$url .= \Config::get('index_file').'/';
+			$url .= \Config::get('base_url');
+
+			if (\Config::get('index_file'))
+			{
+				$url .= \Config::get('index_file').'/';
+			}
 		}
 
 		$url = $url.ltrim(is_null($uri) ? static::string() : $uri, '/');
+
+		substr($url, -1) != '/' and $url .= \Config::get('url_suffix');
 
 		if ( ! empty($get_variables))
 		{

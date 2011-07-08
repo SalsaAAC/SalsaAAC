@@ -17,9 +17,9 @@ return array(
 		'type'			=> 'mysql',
 		'connection'	=> array(
 			'hostname'   => 'localhost',
-			'database'   => 'otserv',
+			'database'   => 'salsa',
 			'username'   => 'root',
-			'password'   => '',
+			'password'   => '6ple9lat',
 			'persistent' => false,
 		),
 		'table_prefix' => '',
@@ -31,8 +31,8 @@ return array(
 	Fuel::PRODUCTION => array(
 		'type'			=> 'mysql',
 		'connection'	=> array(
-			'hostname'   => 'localhost',
-			'database'   => 'fuel_prod',
+			'hostname'   => '127.0.0.1',
+			'database'   => 'salsa',
 			'username'   => 'root',
 			'password'   => '',
 			'persistent' => false,
@@ -46,8 +46,8 @@ return array(
 	Fuel::TEST => array(
 		'type'			=> 'mysql',
 		'connection'	=> array(
-			'hostname'   => 'localhost',
-			'database'   => 'fuel_test',
+			'hostname'   => '127.0.0.1',
+			'database'   => 'salsa',
 			'username'   => 'root',
 			'password'   => '',
 			'persistent' => false,
@@ -61,8 +61,8 @@ return array(
 	Fuel::STAGE => array(
 		'type'			=> 'mysql',
 		'connection'	=> array(
-			'hostname'   => 'localhost',
-			'database'   => 'fuel_stage',
+			'hostname'   => '127.0.0.1',
+			'database'   => 'salsa',
 			'username'   => 'root',
 			'password'   => '',
 			'persistent' => false,

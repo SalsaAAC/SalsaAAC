@@ -54,8 +54,8 @@
 	
 	<section id="secondary_bar">
 		<div class="user">
-			<p>{{username}} (<a href="#">{{msg_num}}</a>)</p>
-			<a class="logout_user" href="#" title="Logout">Logout</a>
+			<p>{{user.username}} (<a href="#">{{msg_num}}</a>)</p>
+			<a class="logout_user" href="{{baseurl}}administration/logout" title="Logout">Logout</a>
 		</div>
 		<div class="breadcrumbs_container">
 			<article class="breadcrumbs"><a href="index.html">Website Admin</a> <div class="breadcrumb_divider"></div> <a class="current">Dashboard</a></article>
@@ -102,6 +102,9 @@
 	</aside><!-- end of sidebar -->
 	
 	<section id="main" class="column">
+	{% if alert.warning is defined %}
+	    <h4 class="alert_warning">{{alert.warning}}</h4>
+	{% endif %}
 	{% block content %}{% endblock %}
 
 	<div class="spacer"></div>

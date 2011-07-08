@@ -11,12 +11,9 @@ call_user_func(function() {
 	/**
 	 * Set all the paths here
 	 */
-	//$app_path		= '../fuel/app/';
-	$app_path		= '..'.DIRECTORY_SEPARATOR.'fuel'.DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR;
-	//$package_path	= '../fuel/packages/';
-	$package_path	= '..'.DIRECTORY_SEPARATOR.'fuel'.DIRECTORY_SEPARATOR.'packages'.DIRECTORY_SEPARATOR;
-	//$core_path		= '../fuel/core/';
-	$core_path		= '..'.DIRECTORY_SEPARATOR.'fuel'.DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR;
+	$app_path		= '../fuel/app/';
+	$package_path	= '../fuel/packages/';
+	$core_path		= '../fuel/core/';
 
 
 	/**
@@ -31,7 +28,6 @@ call_user_func(function() {
 	define('APPPATH', realpath($app_path).DIRECTORY_SEPARATOR);
 	define('PKGPATH', realpath($package_path).DIRECTORY_SEPARATOR);
 	define('COREPATH', realpath($core_path).DIRECTORY_SEPARATOR);
-
 
 });
 
@@ -51,7 +47,6 @@ $bm = Profiler::app_total();
 $response->body(str_replace(array('{exec_time}', '{mem_usage}'), array(round($bm[0], 4), round($bm[1] / pow(1024, 2), 3)), $response->body()));
 
 $response->send(true);
-
 
 // Fire off the shutdown event
 Event::shutdown();

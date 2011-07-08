@@ -36,7 +36,7 @@ return array(
 	'language'	=> 'english',
 
 	/**
-	 * OTServ database settings
+	 * OTServ settings
 	 */
 	'otserv' => array(
 
@@ -68,12 +68,22 @@ return array(
 		/**
 		 * Database password.
 		 */
-		'password'          => '',
+		'password'          => '6ple9lat',
 
 		/**
-		 * database name.
+		 * Database name.
 		 */
 		'database'          => 'otserv',
+
+		/**
+		 * OTServ ip adress.
+		 */
+		'ip'                => '127.0.0.1',
+
+		/**
+		 * OTServ port.
+		 */
+		'port'              => 7171,
 	),
 );
 

@@ -5,12 +5,12 @@ return array(
 	/**
 	 * DB table name for the user table
 	 */
-	'table_name' => 'aac_users',
+	'table_name' => 'simpleusers',
 
 	/**
 	 * This will allow you to use the group & acl driver for non-logged in users
 	 */
-	'guest_login' => false,
+	'guest_login' => true,
 
 	/**
 	 * Groups as id => array(name => <string>, roles => <array>)
@@ -41,5 +41,5 @@ return array(
 	/**
 	 * Salt for the login hash
 	 */
-	'login_hash_salt' => 'ah$GlOtN48DCERemNAq0jLlm$Zo!41S%',
+	'login_hash_salt' => 'put_some_salt_in_here',
 );
