@@ -1,89 +1,31 @@
 <?php
 /**
- *  Copyright (C) 2011  SalsaAAC
+ * Fuel is a fast, lightweight, community driven PHP5 framework.
  *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Affero General Public License as
- *  published by the Free Software Foundation, either version 3 of the
- *  License, or (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Affero General Public License for more details.
- *
- *  You should have received a copy of the GNU Affero General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * @package		Fuel
+ * @version		1.0
+ * @author		Fuel Development Team
+ * @license		MIT License
+ * @copyright	2011 Fuel Development Team
+ * @link		http://fuelphp.com
  */
 
-return array(
-
-	/**
-	 * site_name - The name of your website.
-	 */
-	'site_name'	=> 'Site Name',
-
-	/**
-	 * theme - Name of theme used on frontend.
-	 */
-	'theme'		=> 'default',
-
-	/**
-	 * language - Default language used on frontend site.
-	 *
-	 * Affects only template translation.
-	 */
-	'language'	=> 'english',
-
-	/**
-	 * OTServ settings
-	 */
-	'otserv' => array(
-
-		/**
-		 * Type of database you use.
-		 *
-		 * POT::DB_MYSQL
-		 * POT::DB_SQLITE
-		 * POT::DB_PGSQL
-		 * POT::DB_ODBC
-		 */
-		'driver'            => 'POT::DB_MYSQL',
-
-		/**
-		 * Table prefix.
-		 */
-		'prefix'            => '',
-
-		/**
-		 * Database host.
-		 */
-		'host'              => 'localhost',
-
-		/**
-		 * Database user.
-		 */
-		'user'              => 'root',
-
-		/**
-		 * Database password.
-		 */
-		'password'          => '',
-
-		/**
-		 * Database name.
-		 */
-		'database'          => 'otserv',
-
-		/**
-		 * OTServ ip adress.
-		 */
-		'ip'                => '127.0.0.1',
-
-		/**
-		 * OTServ port.
-		 */
-		'port'              => 7171,
+return array (
+	'site_name' => 'Site name',
+	'theme' => 'default',
+	'language' => 'english',
+	'offline' => false,
+	'offline_message' => 'This site is down for maintenance.<br> Please check back again soon.',
+	'otserv' => 
+	array (
+		'driver' => 'POT::DB_MYSQL',
+		'prefix' => '',
+		'host' => 'localhost',
+		'user' => 'root',
+		'password' => '',
+		'database' => 'otserv',
+		'ip' => '127.0.0.1',
+		'port' => 7171,
 	),
 );
 

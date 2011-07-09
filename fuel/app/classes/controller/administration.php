@@ -100,6 +100,19 @@ class Controller_Administration extends Controller_Admin {
 		$this->response->body = View::factory('dashboard.twig', self::$theme_data);
 	}
 
+	public function action_configuration()
+	{
+		$this->response->body = View::factory('configuration.twig', self::$theme_data);
+	}
+
+	public function action_conf()
+	{
+		\Config::load('salsa', true);
+		echo \Config::get('salsa.site_name');
+		\Config::set('salsa.site_name', 'Po zmianie');
+		\Config::save('salsa', 'salsa');
+	}
+
 	public function action_logout()
 	{
 		Auth::instance()->logout();

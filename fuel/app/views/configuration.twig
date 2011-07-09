@@ -1,0 +1,140 @@
+{% extends "template.twig" %}
+
+{% block content %}
+		<article class="module width_full">
+		<header><h3 class="tabs_involved">Configuration</h3>
+		<ul class="tabs">
+   			<li><a href="#tab1">Site</a></li>
+    			<li><a href="#tab2">AAC DB</a></li>
+    			<li><a href="#tab3">OTServ</a></li>
+		</ul>
+		</header>
+
+		<div class="tab_container">
+			<div id="tab1" class="tab_content">
+			<h1 style="margin-left: 20px">Site configuration</h1>
+				<fieldset class="configuration_full">
+					<div class="column-left"><label>Site name</label><div class="clear"></div><small><i>For front site, email notifications etc.</i></small></div>
+					<div class="column-right"><input type="text"></div>
+				</fieldset>
+				<fieldset class="configuration_full">
+					<div class="column-left"><label>Site offline</label><div class="clear"></div><small><i>Select whether access to the site frontend is aveaible.</i></small></div>
+					<div class="column-right"><input type="checkbox" style="width: 27px"></div>
+				</fieldset>
+				<fieldset class="configuration_full">
+					<div class="column-left"><label>Offline message</label><div class="clear"></div><small><i>Message that diplays in the frontend if you set your site offline.</i></small></div>
+					<div class="column-right"><textarea rows="5" style="width: 300px"></textarea>
+				</fieldset>
+				<fieldset class="configuration_full">
+					<div class="column-left"><label>Site meta description</label><div class="clear"></div><small><i>Description of the overall website that is to be used by search engines.<br>A maximum of 20 characters is optimal.</i></small></div>
+					<div class="column-right"><textarea rows="5" style="width: 300px"></textarea>
+				</fieldset>
+				<fieldset class="configuration_full">
+					<div class="column-left"><label>Site meta keywords</label><div class="clear"></div><small><i>Keywords that the best describe your website.<br>Seperate keywords with a comma.</i></small></div>
+					<div class="column-right"><textarea rows="5" style="width: 300px"></textarea>
+				</fieldset>
+				<fieldset class="configuration_full">
+					<div class="column-left"><label>Site address</label><div class="clear"></div><small><i>Full URL address with http:// and ending slash.</i></small></div>
+					<div class="column-right"><input type="text"></div>
+				</fieldset>
+				<fieldset class="configuration_full">
+					<div class="column-left"><label>Admin email</label><div class="clear"></div><small><i>This address is used for admin purposes.</i></small></div>
+					<div class="column-right"><input type="text"></div>
+				</fieldset>
+				<fieldset class="configuration_full">
+					<div class="column-left"><label>Site email</label><div class="clear"></div><small><i>This address is used for users' notifications.</i></small></div>
+					<div class="column-right"><input type="text"></div>
+				</fieldset>
+				<fieldset class="configuration_full">
+					<div class="column-left"><label>Timezone</label><div class="clear"></div><small><i>Every time will be converted to that timezone.</i></small></div>
+					<div class="column-right">
+						<select class="configuration">
+							<option>Articles</option>
+							<option>Tutorials</option>
+							<option>Freebies</option>
+						</select>
+					</div>
+				</fieldset>
+				<fieldset class="configuration_full">
+					<div class="column-left"><label>Date format</label><div class="clear"></div><small><i>You can read more about it <a href="http://php.net/manual/en/function.date.php">here</a>.</i></small></div>
+					<div class="column-right"><input type="text"></div>
+				</fieldset>
+				<fieldset class="configuration_full">
+					<div class="column-left"><label>Time format</label><div class="clear"></div><small><i>You can read more about it <a href="http://php.net/manual/en/function.date.php">here</a>.</i></small></div>
+					<div class="column-right"><input type="text"></div>
+				</fieldset>
+				<div class="clear"></div>
+			</div><!-- end of #tab1 -->
+			
+			<div id="tab2" class="tab_content">
+			<h1 style="margin-left: 20px">AAC database configuration</h1>
+			<fieldset class="configuration_full">
+					<div class="column-left"><label>Database type</label><div class="clear"></div><small><i>Specify type of AAC database.</i></small></div>
+					<div class="column-right">
+						<select class="configuration">
+							<option>Articles</option>
+							<option>Tutorials</option>
+							<option>Freebies</option>
+						</select>
+					</div>
+				</fieldset>
+				<fieldset class="configuration_full">
+					<div class="column-left"><label>Database host</label><div class="clear"></div><small><i>Database host e.g. 'localhost'.</i></small></div>
+					<div class="column-right"><input type="text"></div>
+				</fieldset>
+				<fieldset class="configuration_full">
+					<div class="column-left"><label>Database name</label><div class="clear"></div><small><i>Name of database, default 'salsa'.</i></small></div>
+					<div class="column-right"><input type="text"></div>
+				</fieldset>
+				<fieldset class="configuration_full">
+					<div class="column-left"><label>Database user</label><div class="clear"></div><small><i>Name of database user, default 'root'.</i></small></div>
+					<div class="column-right"><input type="text"></div>
+				</fieldset>
+				<fieldset class="configuration_full">
+					<div class="column-left"><label>Database password</label><div class="clear"></div><small><i>Password used to connect database.</i></small></div>
+					<div class="column-right"><input type="text"></div>
+			</fieldset>
+			</div><!-- end of #tab2 -->
+						
+			<div id="tab3" class="tab_content">
+			<h1 style="margin-left: 20px">OTServ database configuration</h1>
+			<h4 style="margin-left: 20px">This only affects SalsaAAC.</h4>
+			<fieldset class="configuration_full">
+					<div class="column-left"><label>Database type</label><div class="clear"></div><small><i>Specify type of AAC database.</i></small></div>
+					<div class="column-right">
+						<select class="configuration">
+							<option>Articles</option>
+							<option>Tutorials</option>
+							<option>Freebies</option>
+						</select>
+					</div>
+				</fieldset>
+				<fieldset class="configuration_full">
+					<div class="column-left"><label>Database host</label><div class="clear"></div><small><i>Database host e.g. 'localhost'.</i></small></div>
+					<div class="column-right"><input type="text"></div>
+				</fieldset>
+				<fieldset class="configuration_full">
+					<div class="column-left"><label>Database name</label><div class="clear"></div><small><i>Name of database, default 'salsa'.</i></small></div>
+					<div class="column-right"><input type="text"></div>
+				</fieldset>
+				<fieldset class="configuration_full">
+					<div class="column-left"><label>Database user</label><div class="clear"></div><small><i>Name of database user, default 'root'.</i></small></div>
+					<div class="column-right"><input type="text"></div>
+				</fieldset>
+				<fieldset class="configuration_full">
+					<div class="column-left"><label>Database password</label><div class="clear"></div><small><i>Password used to connect database.</i></small></div>
+					<div class="column-right"><input type="text"></div>
+			</fieldset>			
+			</div><!-- end of #tab2 -->
+
+			<div id="tab4" class="tab_content">
+			
+			</div><!-- end of #tab2 -->
+		</div><!-- end of .tab_container -->
+		<footer>
+			<div class="submit_link">
+				<input type="submit" value="Save" class="alt_btn">
+			</div>
+		</footer>
+		</article><!-- end of content manager article -->
+{% endblock %}

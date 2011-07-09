@@ -23,7 +23,7 @@ return array(
 	 *
 	 * Set this to null to have it automatically detected.
 	 */
-	'base_url'		=> '',
+	'base_url'		=> 'http://localhost/',
 
 	/**
 	 * url_suffix - Any suffix that needs to be added to
