@@ -58,8 +58,7 @@ class Controller_Administration extends Controller_Admin {
 
 	public function action_dashboard()
 	{
-		\Config::load('salsa', true);		
-		self::$theme_data['players_online']  = \Config::get('config.base_url');
+		\Config::load('salsa', true);
 	
 		$info = new OTS_ServerInfo(\Config::get('salsa.otserv.ip', '127.0.0.1'), \Config::get('salsa.otserv.port', 7171));
 		$status = $info->status();
@@ -102,6 +101,38 @@ class Controller_Administration extends Controller_Admin {
 
 	public function action_configuration()
 	{
+		\Config::load('salsa', true);
+		\Config::load('db', true);
+		//\Config::load('config', true);
+		$error = 'Config value cannot be readed.';
+		$environment = Config::get('config.environment');
+
+		self::$theme_data['site']['name']            = \Config::get('salsa.site_name', $error);
+		self::$theme_data['site']['offline']         = \Config::get('salsa.offline', false) ? ' checked="yes"' : '';
+		self::$theme_data['site']['offline_message'] = \Config::get('salsa.offline_message', $error);
+		self::$theme_data['site']['meta_desc']       = \Config::get('salsa.meta_description', $error);
+		self::$theme_data['site']['meta_keywords']   = \Config::get('salsa.meta_keywords', $error);
+		self::$theme_data['site']['address']         = \Config::get('config.base_url', $error);
+		self::$theme_data['site']['admin_email']     = \Config::get('salsa.admin_email', $error);
+		self::$theme_data['site']['site_email']      = \Config::get('salsa.site_email', $error);
+		self::$theme_data['site']['timezone']        = '';
+		self::$theme_data['site']['date_format']     = \Config::get('salsa.date_format', $error);
+		self::$theme_data['site']['time_format']     = \Config::get('salsa.time_format', $error);
+
+		self::$theme_data['db']['type']     = '';
+		self::$theme_data['db']['host']     = \Config::get('db.'.$environment.'.connection.hostname', $error);
+		self::$theme_data['db']['name']     = \Config::get('db.'.$environment.'.connection.database', $error);
+		self::$theme_data['db']['user']     = \Config::get('db.'.$environment.'.connection.username', $error);
+		self::$theme_data['db']['password'] = \Config::get('db.'.$environment.'.connection.password', $error);
+
+		self::$theme_data['otserv']['db_type']     = '';
+		self::$theme_data['otserv']['db_host']     = \Config::get('salsa.otserv.host', $error);
+		self::$theme_data['otserv']['db_name']     = \Config::get('salsa.otserv.database', $error);
+		self::$theme_data['otserv']['db_user']     = \Config::get('salsa.otserv.user', $error);
+		self::$theme_data['otserv']['db_password'] = \Config::get('salsa.otserv.password', $error);
+		self::$theme_data['otserv']['ip']          = \Config::get('salsa.otserv.ip', $error);
+		self::$theme_data['otserv']['port']        = \Config::get('salsa.otserv.port', $error);
+
 		$this->response->body = View::factory('configuration.twig', self::$theme_data);
 	}
 
