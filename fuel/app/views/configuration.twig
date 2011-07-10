@@ -1,7 +1,11 @@
 {% extends "template.twig" %}
 
 {% block content %}
+		<h4 class="alert_error" style="display: none"></h4>		
+		<h4 class="alert_success" style="display: none">Configuration saved!</h4>
+
 		<article class="module width_full">
+		<form id="config_form" action="#">
 		<header><h3 class="tabs_involved">Configuration</h3>
 		<ul class="tabs">
    			<li><a href="#tab1">Site</a></li>
@@ -15,53 +19,51 @@
 			<h1 style="margin-left: 20px">Site configuration</h1>
 				<fieldset class="configuration_full">
 					<div class="column-left"><label>Site name</label><div class="clear"></div><small><i>For front site, email notifications etc.</i></small></div>
-					<div class="column-right"><input type="text" value="{{site.name}}"></div>
+					<div class="column-right"><input type="text" name="site_name" value="{{site.name}}"></div>
 				</fieldset>
 				<fieldset class="configuration_full">
 					<div class="column-left"><label>Site offline</label><div class="clear"></div><small><i>Select whether access to the site frontend is aveaible.</i></small></div>
-					<div class="column-right"><input type="checkbox" style="width: 27px"{{site.offline}}></div>
+					<div class="column-right"><input type="checkbox" name="site_offline" style="width: 27px"{{site.offline}}></div>
 				</fieldset>
 				<fieldset class="configuration_full">
 					<div class="column-left"><label>Offline message</label><div class="clear"></div><small><i>Message that diplays in the frontend if you set your site offline.</i></small></div>
-					<div class="column-right"><textarea rows="5" style="width: 300px">{{site.offline_message}}</textarea>
+					<div class="column-right"><textarea name="offline_message" rows="5" style="width: 300px">{{site.offline_message}}</textarea>
 				</fieldset>
 				<fieldset class="configuration_full">
 					<div class="column-left"><label>Site meta description</label><div class="clear"></div><small><i>Description of the overall website that is to be used by search engines.<br>A maximum of 20 characters is optimal.</i></small></div>
-					<div class="column-right"><textarea rows="5" style="width: 300px">{{site.meta_desc}}</textarea>
+					<div class="column-right"><textarea name="meta_desc" rows="5" style="width: 300px">{{site.meta_desc}}</textarea>
 				</fieldset>
 				<fieldset class="configuration_full">
 					<div class="column-left"><label>Site meta keywords</label><div class="clear"></div><small><i>Keywords that the best describe your website.<br>Seperate keywords with a comma.</i></small></div>
-					<div class="column-right"><textarea rows="5" style="width: 300px">{{site.meta_keywords}}</textarea>
+					<div class="column-right"><textarea name="meta_keys" rows="5" style="width: 300px">{{site.meta_keywords}}</textarea>
 				</fieldset>
 				<fieldset class="configuration_full">
 					<div class="column-left"><label>Site address</label><div class="clear"></div><small><i>Full URL address with http:// and ending slash.</i></small></div>
-					<div class="column-right"><input type="text" value="{{site.address}}"></div>
+					<div class="column-right"><input name="site_address" type="text" value="{{site.address}}"></div>
 				</fieldset>
 				<fieldset class="configuration_full">
 					<div class="column-left"><label>Admin email</label><div class="clear"></div><small><i>This address is used for admin purposes.</i></small></div>
-					<div class="column-right"><input type="text" value="{{site.admin_email}}"></div>
+					<div class="column-right"><input name="admin_email" type="text" value="{{site.admin_email}}"></div>
 				</fieldset>
 				<fieldset class="configuration_full">
 					<div class="column-left"><label>Site email</label><div class="clear"></div><small><i>This address is used for users' notifications.</i></small></div>
-					<div class="column-right"><input type="text" value="{{site.site_email}}"></div>
+					<div class="column-right"><input name="site_email" type="text" value="{{site.site_email}}"></div>
 				</fieldset>
 				<fieldset class="configuration_full">
 					<div class="column-left"><label>Timezone</label><div class="clear"></div><small><i>Every time will be converted to that timezone.</i></small></div>
 					<div class="column-right">
 						<select class="configuration">
-							<option>Articles</option>
-							<option>Tutorials</option>
-							<option>Freebies</option>
+							<option>Default</option>
 						</select>
 					</div>
 				</fieldset>
 				<fieldset class="configuration_full">
 					<div class="column-left"><label>Date format</label><div class="clear"></div><small><i>You can read more about it <a href="http://php.net/manual/en/function.date.php">here</a>.</i></small></div>
-					<div class="column-right"><input type="text" value="{{site.date_format}}"></div>
+					<div class="column-right"><input name="date_format" type="text" value="{{site.date_format}}"></div>
 				</fieldset>
 				<fieldset class="configuration_full">
 					<div class="column-left"><label>Time format</label><div class="clear"></div><small><i>You can read more about it <a href="http://php.net/manual/en/function.date.php">here</a>.</i></small></div>
-					<div class="column-right"><input type="text" value="{{site.time_format}}"></div>
+					<div class="column-right"><input name="time_format" type="text" value="{{site.time_format}}"></div>
 				</fieldset>
 				<div class="clear"></div>
 			</div><!-- end of #tab1 -->
@@ -71,28 +73,26 @@
 			<fieldset class="configuration_full">
 					<div class="column-left"><label>Database type</label><div class="clear"></div><small><i>Specify type of AAC database.</i></small></div>
 					<div class="column-right">
-						<select class="configuration">
-							<option>Articles</option>
-							<option>Tutorials</option>
-							<option>Freebies</option>
+						<select name="db_type" class="configuration">
+							<option value="mysql">MySQL</option>
 						</select>
 					</div>
 				</fieldset>
 				<fieldset class="configuration_full">
 					<div class="column-left"><label>Database host</label><div class="clear"></div><small><i>Database host e.g. 'localhost'.</i></small></div>
-					<div class="column-right"><input type="text" value="{{db.host}}"></div>
+					<div class="column-right"><input name="db_host" type="text" value="{{db.host}}"></div>
 				</fieldset>
 				<fieldset class="configuration_full">
 					<div class="column-left"><label>Database name</label><div class="clear"></div><small><i>Name of database, default 'salsa'.</i></small></div>
-					<div class="column-right"><input type="text" value="{{db.name}}"></div>
+					<div class="column-right"><input name="db_name" type="text" value="{{db.name}}"></div>
 				</fieldset>
 				<fieldset class="configuration_full">
 					<div class="column-left"><label>Database user</label><div class="clear"></div><small><i>Name of database user, default 'root'.</i></small></div>
-					<div class="column-right"><input type="text" value="{{db.user}}"></div>
+					<div class="column-right"><input name="db_user" type="text" value="{{db.user}}"></div>
 				</fieldset>
 				<fieldset class="configuration_full">
 					<div class="column-left"><label>Database password</label><div class="clear"></div><small><i>Password used to connect database.</i></small></div>
-					<div class="column-right"><input type="text" value="{{db.password}}"></div>
+					<div class="column-right"><input name="db_password" type="text" value="{{db.password}}"></div>
 			</fieldset>
 			</div><!-- end of #tab2 -->
 						
@@ -102,36 +102,34 @@
 			<fieldset class="configuration_full">
 					<div class="column-left"><label>Database type</label><div class="clear"></div><small><i>Specify type of AAC database.</i></small></div>
 					<div class="column-right">
-						<select class="configuration">
-							<option>Articles</option>
-							<option>Tutorials</option>
-							<option>Freebies</option>
+						<select name="ot_type" class="configuration">
+							<option value="POT::DB_MYSQL">MySQL</option>
 						</select>
 					</div>
 				</fieldset>
 				<fieldset class="configuration_full">
 					<div class="column-left"><label>Database host</label><div class="clear"></div><small><i>Database host e.g. 'localhost'.</i></small></div>
-					<div class="column-right"><input type="text" value="{{otserv.db_host}}"></div>
+					<div class="column-right"><input name="ot_host" type="text" value="{{otserv.db_host}}"></div>
 				</fieldset>
 				<fieldset class="configuration_full">
 					<div class="column-left"><label>Database name</label><div class="clear"></div><small><i>Name of database, default 'salsa'.</i></small></div>
-					<div class="column-right"><input type="text" value="{{otserv.db_name}}"></div>
+					<div class="column-right"><input name="ot_name" type="text" value="{{otserv.db_name}}"></div>
 				</fieldset>
 				<fieldset class="configuration_full">
 					<div class="column-left"><label>Database user</label><div class="clear"></div><small><i>Name of database user, default 'root'.</i></small></div>
-					<div class="column-right"><input type="text" value="{{otserv.db_user}}"></div>
+					<div class="column-right"><input name="ot_user" type="text" value="{{otserv.db_user}}"></div>
 				</fieldset>
 				<fieldset class="configuration_full">
 					<div class="column-left"><label>Database password</label><div class="clear"></div><small><i>Password used to connect database.</i></small></div>
-					<div class="column-right"><input type="text" value="{{otserv.db_password}}"></div>
+					<div class="column-right"><input name="ot_password" type="text" value="{{otserv.db_password}}"></div>
 				</fieldset>	
 				<fieldset class="configuration_full">
 					<div class="column-left"><label>Server ip address</label><div class="clear"></div><small><i>Ip address used in socked connection with OTServ application.</i></small></div>
-					<div class="column-right"><input type="text" value="{{otserv.ip}}"></div>
+					<div class="column-right"><input name="ot_ip" type="text" value="{{otserv.ip}}"></div>
 				</fieldset>	
 				<fieldset class="configuration_full">
 					<div class="column-left"><label>Server port</label><div class="clear"></div><small><i>Port used in socked connection with OTServ application.</i></small></div>
-					<div class="column-right"><input type="text" value="{{otserv.port}}"></div>
+					<div class="column-right"><input name="ot_port" type="text" value="{{otserv.port}}"></div>
 				</fieldset>			
 			</div><!-- end of #tab2 -->
 
@@ -141,8 +139,9 @@
 		</div><!-- end of .tab_container -->
 		<footer>
 			<div class="submit_link">
-				<input type="submit" value="Save" class="alt_btn">
+				<input type="submit" name="submit" value="Save" class="alt_btn">
 			</div>
 		</footer>
+		</form>
 		</article><!-- end of content manager article -->
 {% endblock %}

@@ -1,5 +1,9 @@
 body {
-	background: url(../img/login-bg.jpg) repeat-x;
+	background: url(../img/login-bg4.jpg);
+	-o-background-size: 100% 100%, auto;
+	-moz-background-size: 100% 100%, auto;
+	-webkit-background-size: 100% 100%, auto;
+	background-size: 100% 100%, auto;
 	height: 100%;
 	max-height: 100%;
 }

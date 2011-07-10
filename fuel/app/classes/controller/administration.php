@@ -64,7 +64,8 @@ class Controller_Administration extends Controller_Admin {
 		$status = $info->status();
 		if(!$status)
 		{
-			self::$theme_data['alert']['warning'] = 'The server is offline!';
+			self::$theme_data['alert']['message'] = 'The server is offline!';
+			self::$theme_data['alert']['type']    = 'warning';
 			self::$theme_data['players_online']   = 'OFF';
 			self::$theme_data['monsters']         = 'OFF';
 		}
@@ -136,18 +137,26 @@ class Controller_Administration extends Controller_Admin {
 		$this->response->body = View::factory('configuration.twig', self::$theme_data);
 	}
 
-	public function action_conf()
+	public function action_val()
 	{
-		\Config::load('salsa', true);
-		echo \Config::get('salsa.site_name');
-		\Config::set('salsa.site_name', 'Po zmianie');
-		\Config::save('salsa', 'salsa');
+
+		echo Input::post('test');
 	}
 
 	public function action_logout()
 	{
 		Auth::instance()->logout();
 		Response::redirect('/');
+	}
+
+	public function action_404()
+	{
+		$messages = array('Aw, crap!', 'Bloody Hell!', 'Uh Oh!', 'Nope, not here.', 'Huh?');
+		$data['title'] = $messages[array_rand($messages)];
+
+		// Set a HTTP 404 output header
+		$this->response->status = 404;
+		$this->response->body = View::factory('dashboard.twig', $data);
 	}
 }
 

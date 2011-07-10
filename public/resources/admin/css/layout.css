@@ -646,7 +646,7 @@ text-align: left;
 padding: 5px 0;
 }
 
-.post_message input[type=text] {
+input[type=text] {
 -webkit-border-radius: 5px;
 -moz-border-radius: 5px;
 border-radius: 5px;
@@ -882,3 +882,34 @@ color: #32510F;
 padding: 10px 0;
 text-indent: 40px;
 font-size: 14px;}
+
+html body section#main.column article.module div.tab_container div.column-left {
+	float: left;
+	width: 34%;
+	text-align: right;
+}
+
+html body section#main.column article.module div.tab_container div.column-right {
+	float: right;
+	width: 63%;
+	text-align: left;
+}
+
+html body section#main.column article.module div.tab_container fieldset div.column-left label {
+	float: right;
+}
+
+html body section#main.column article.module div.tab_container fieldset div.column-right input {
+	margin-top: 9px;
+	width: 300px;
+}
+
+html body section#main.column article.module div.tab_container fieldset.configuration_full {
+	width: 96%;
+	margin: 10px auto 10px auto;
+}
+
+html body section#main.column article.module div.tab_container fieldset select.configuration {
+	width: 310px;
+	margin-top:  10px;
+}
