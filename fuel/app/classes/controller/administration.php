@@ -104,7 +104,6 @@ class Controller_Administration extends Controller_Admin {
 	{
 		\Config::load('salsa', true);
 		\Config::load('db', true);
-		//\Config::load('config', true);
 		$error = 'Config value cannot be readed.';
 		$environment = Config::get('config.environment');
 
@@ -121,27 +120,57 @@ class Controller_Administration extends Controller_Admin {
 		self::$theme_data['site']['time_format']     = \Config::get('salsa.time_format', $error);
 
 		self::$theme_data['db']['type']     = '';
-		self::$theme_data['db']['host']     = \Config::get('db.'.$environment.'.connection.hostname', $error);
-		self::$theme_data['db']['name']     = \Config::get('db.'.$environment.'.connection.database', $error);
-		self::$theme_data['db']['user']     = \Config::get('db.'.$environment.'.connection.username', $error);
-		self::$theme_data['db']['password'] = \Config::get('db.'.$environment.'.connection.password', $error);
+		self::$theme_data['db']['host']     = \Config::get('db.salsa.connection.hostname', $error);
+		self::$theme_data['db']['name']     = \Config::get('db.salsa.connection.database', $error);
+		self::$theme_data['db']['user']     = \Config::get('db.salsa.connection.username', $error);
+		self::$theme_data['db']['password'] = \Config::get('db.salsa.connection.password', $error);
 
 		self::$theme_data['otserv']['db_type']     = '';
-		self::$theme_data['otserv']['db_host']     = \Config::get('salsa.otserv.host', $error);
-		self::$theme_data['otserv']['db_name']     = \Config::get('salsa.otserv.database', $error);
-		self::$theme_data['otserv']['db_user']     = \Config::get('salsa.otserv.user', $error);
-		self::$theme_data['otserv']['db_password'] = \Config::get('salsa.otserv.password', $error);
+		self::$theme_data['otserv']['db_host']     = \Config::get('db.otserv.connection.hostname', $error);
+		self::$theme_data['otserv']['db_name']     = \Config::get('db.otserv.connection.database', $error);
+		self::$theme_data['otserv']['db_user']     = \Config::get('db.otserv.connection.username', $error);
+		self::$theme_data['otserv']['db_password'] = \Config::get('db.otserv.connection.password', $error);
 		self::$theme_data['otserv']['ip']          = \Config::get('salsa.otserv.ip', $error);
 		self::$theme_data['otserv']['port']        = \Config::get('salsa.otserv.port', $error);
 
 		$this->response->body = View::factory('configuration.twig', self::$theme_data);
 	}
 
-	public function action_val()
+	public function action_players()
 	{
-
-		echo Input::post('test');
+		
+		$this->response->body = View::factory('players.twig', self::$theme_data);
 	}
+
+	public function action_test()
+	{
+		$players = new OTS_Players_List();
+		$players->orderBy(new OTS_SQLField('name', 'players'));
+		$players->setLimit(10);
+		$players->setOffset(0);
+
+		foreach($players as $player)
+		{
+			$account = $player->getAccount();
+			$group   = $player->getGroup();
+			echo '<tr><td>'.$player->getName().'</td>
+				<td>'.$account->getName().'</td>
+				<td>'.date("jS F Y", $player->getLastLogin()).'</td>
+				<td>'.$player->getLevel().'</td>
+				<td>'.$account->getAccess().'</td>
+				<td>'.$group->getName().'</td>
+				<td>'.$player->isOnline().'</td></tr>';
+		}	
+	}
+
+	public function action_name()
+	{
+		for ($i = 1; $i< 16; $i++)
+		{
+			$n = rand(10e16, 10e20);
+			echo base_convert($n, 10, 36).'<br>';
+		}
+	}		
 
 	public function action_logout()
 	{

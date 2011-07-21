@@ -1,0 +1,61 @@
+{% extends "template.twig" %}
+
+{% block content %}		
+		<div id="loading" style="display: none"><img src="{{baseurl}}resources/admin/img/ajax-loader.gif"></div>
+		<article class="module width_full">
+		<header><h3 class="tabs_involved">Content</h3></header>
+
+		<div class="tab_container">
+			<table class="tablesorter" cellspacing="0"> 
+			<thead> 
+				<tr> 
+    				<th>Name</th> 
+    				<th>Account</th> 
+    				<th>Last login</th> 
+    				<th>Level</th> 
+    				<th>Access</th> 
+    				<th>Group</th> 
+    				<th>Online</th> 
+				</tr> 
+			</thead> 
+			<tbody> 
+			</tbody> 
+			</table>
+				<div id="menu"></div>
+				<div class="clear"></div>
+			</div><!-- end of #tab1 -->		
+		</div><!-- end of .tab_container -->
+		
+		</article><!-- end of content manager article -->
+<script type="text/javascript">
+$(document).ready(function () {	
+	function loadData(page)
+	{
+		$('#loading').css('margin-left', $('section[id="main"]').width()/2 - 20);
+		$('#loading').fadeIn('fast');
+		$.ajax({
+			type: "POST",
+			url: "/adminactions/getplayerslist.json",
+			data: "page="+page,
+			async: false,
+    			dataType: "json",
+			success: function(data)
+			{
+				$('#loading').fadeOut();
+				$("tbody").html(data.message);
+				$("#menu").html(data.menu);
+				$('#sidebar').height($(document).height()-90);
+				$('#main').height($(document).height()-90);
+				$("#menu").css('margin-left', $(".tab_container").width()/2 - 106 - 9*data.max);
+			}
+		});
+	}
+
+	loadData(1);
+	$('#menu ul#pagination li a').live('click',function(){
+		var page = $(this).parent().attr('p');
+		loadData(page);
+	});
+});
+</script>
+{% endblock %}

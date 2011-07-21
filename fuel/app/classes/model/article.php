@@ -17,6 +17,8 @@
  */
 
 class Model_Article extends Orm\Model {
+	protected static $_connection = 'salsa';
+
 	protected static $_properties = array('id', 'author', 'date', 'content', 'title', 'status', 'cathegory');
 
 	protected static $_belongs_to = array(

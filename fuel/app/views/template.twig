@@ -73,12 +73,12 @@
 			<li class="icn_new_article"><a href="#">Dashboard</a></li>
 			<li class="icn_edit_article"><a href="#">Configuration</a></li>
 		</ul>
-		<h3>People</h3>
+		<h3>Server</h3>
 		<ul class="toggle">
 			<li class="icn_new_article"><a href="#">Accounts</a></li>
 			<li class="icn_edit_article"><a href="#">Players</a></li>
-			<li class="icn_categories"><a href="#">Groups</a></li>
 			<li class="icn_tags"><a href="#">Guilds</a></li>
+			<li class="icn_tags"><a href="#">World</a></li>
 			<li class="icn_tags"><a href="#">Mass mail</a></li>
 		</ul>
 		<h3>Content</h3>
@@ -110,10 +110,10 @@
 	    <h4 class="alert_{{alert.type}}">{{alert.message}}</h4>
 	{% endif %}
 	{% block content %}{% endblock %}
-
+<div class="clear"></div>
 	<div class="spacer"></div>
 	</section>
 
 </body>
-
+{{script}}
 </html>

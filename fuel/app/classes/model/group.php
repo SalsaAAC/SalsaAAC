@@ -16,20 +16,20 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Model_Cathegory extends Orm\Model {
-	protected static $_connection = 'salsa';
+class Model_Group extends Orm\Model {
+	protected static $_connection = 'otserv';
 
-	protected static $_properties = array('id', 'description', 'name');
+	protected static $_properties = array('id', 'name', 'flags', 'access', 'violation', 'maxdepotitems', 'maxviplist');
 
 	protected static $_has_many = array(
-		'articles' => array(
+		'player' => array(
 			'key_from'       => 'id',
-			'model_to'       => 'Model_Article',
-			'key_to'         => 'cathegory',
+			'model_to'       => 'Model_Player',
+			'key_to'         => 'group',
 			'cascade_save'   => true,
 			'cascade_delete' => false,
 		)
 	);
 }
 
-/* End of file cathegory.php */ 
+/* End of file group.php */

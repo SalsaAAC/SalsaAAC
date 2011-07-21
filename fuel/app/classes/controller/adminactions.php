@@ -20,7 +20,7 @@ class Controller_Adminactions extends Controller_Rest {
 
 	public function before()
 	{
-		parent::before();
+		//parent::before();
 
 		if( ! \Auth::check() OR Input::method() != 'POST')
 		{
@@ -30,10 +30,10 @@ class Controller_Adminactions extends Controller_Rest {
 			));
 		}
 
-		\Config::load('salsa', true);
+		\Config::load('db', true);
 		require_once(APPPATH.'vendor'.DS.'POT'.DS.'OTS.php');
 
-		switch (\Config::get('salsa.otserv.driver', 'POT::DB_MYSQL'))
+		switch (\Config::get('db.otserv.driver', 'POT::DB_MYSQL'))
 		{
 			case 'POT::DB_SQLITE':
 				$driver = POT::DB_SQLITE;
@@ -49,11 +49,11 @@ class Controller_Adminactions extends Controller_Rest {
 		}
 		$config = array(
 			'driver'   => $driver,
-			'prefix'   => \Config::get('salsa.otserv.prefix', ''),
-			'host'     => \Config::get('salsa.otserv.host', 'localhost'),
-			'user'     => \Config::get('salsa.otserv.user', 'root'),
-			'password' => \Config::get('salsa.otserv.password', ''),
-			'database' => \Config::get('salsa.otserv.database', 'otserv'),
+			'prefix'   => \Config::get('db.otserv.table_prefix', ''),
+			'host'     => \Config::get('db.otserv.connection.hostname', 'localhost'),
+			'user'     => \Config::get('db.otserv.connection.username', 'root'),
+			'password' => \Config::get('db.otserv.connection.password', ''),
+			'database' => \Config::get('db.otserv.connection.database', 'otserv'),
 		);
 		POT::connect(null, $config);
 	}
@@ -73,8 +73,10 @@ class Controller_Adminactions extends Controller_Rest {
 
 		$val1 = Validation::factory('admin_email');
 		$val2 = Validation::factory('site_email');
+		$val3 = Validation::factory('site_address');
 		$val1->add_field('admin_email', 'Admin email', 'required|valid_email');
 		$val2->add_field('site_email', 'Site email', 'required|valid_email');
+		$val3->add_field('site_address', 'Site address', 'required|valid_url');
 		
 		$temp =  Input::post('site_name');
 			\Config::set('salsa.site_name', $temp);
@@ -89,7 +91,15 @@ class Controller_Adminactions extends Controller_Rest {
 			\Config::set('salsa.meta_keywords', $temp);
 		$temp = Input::post('site_address');
 		$temp = Helpers::repair_url($temp);
+		if ($val3->run(array('site_address' => $temp)))
+		{
 			\Config::set('config.base_url', $temp);
+		}
+		else
+		{
+			$data['result'] = 'fail';
+			$messages[]     = 'Site address is not valid ['.$temp.']';
+		}
 		if ($val1->run())
 		{
 			\Config::set('salsa.admin_email', Input::post('admin_email'));
@@ -140,11 +150,11 @@ class Controller_Adminactions extends Controller_Rest {
 		if ($connection AND $database)
 		{
 			mysql_close();
-			\Config::set('db.'.$environment.'.connection.hostname', $temp1);
-			\Config::set('db.'.$environment.'.connection.database', $temp4);
-			\Config::set('db.'.$environment.'.connection.username', $temp2);
-			\Config::set('db.'.$environment.'.connection.password', $temp3);
-			\Config::set('db.'.$environment.'.type', $temp5);
+			\Config::set('db.salsa.connection.hostname', $temp1);
+			\Config::set('db.salsa.connection.database', $temp4);
+			\Config::set('db.salsa.connection.username', $temp2);
+			\Config::set('db.salsa.connection.password', $temp3);
+			\Config::set('db.salsa.type', $temp5);
 		}
 		else
 		{
@@ -162,11 +172,11 @@ class Controller_Adminactions extends Controller_Rest {
 		if ($connection AND $database)
 		{
 			mysql_close();
-			\Config::set('salsa.otserv.host', $temp1);
-			\Config::set('salsa.otserv.database', $temp4);
-			\Config::set('salsa.otserv.user', $temp2);
-			\Config::set('salsa.otserv.password', $temp3);
-			\Config::set('salsa.otserv.driver', $temp5);
+			\Config::set('db.otserv.connection.hostname', $temp1);
+			\Config::set('db.otserv.connection.database', $temp4);
+			\Config::set('db.otserv.connection.username', $temp2);
+			\Config::set('db.otserv.connection.password', $temp3);
+			\Config::set('db.otserv.driver', $temp5);
 		}
 		else
 		{
@@ -199,5 +209,109 @@ class Controller_Adminactions extends Controller_Rest {
 
 		$this->response($data);
 	}
+
+	public function post_getplayerslist()
+	{
+		$page         = Input::post('page');
+		$cur_page     = $page;
+		$order	      = 'name';
+		$page        -= 1;
+		$per_page     = 20;
+		$start        = $page * $per_page;
+		$data['message'] = '';
+		$data['menu'] = '';
+
+		$players = Model_Player::find('all', array(
+			'order_by' => array($order => 'asc'),
+			'limit'    => $per_page,
+			'offset'   => $start
+		));
+
+		/*
+		$players_num = Model_Statistic::find('first', array(
+			'where' => array('name', 'players_num')
+		));
+		*/
+		$players_num = count(Model_Player::find('all'));
+
+		foreach($players as $player)
+		{
+			$data['message'] .= '<tr><td>'.$player->name.'</td>
+				<td>Account</td>
+				<td>'.date("jS F Y", $player->lastlogin).'</td>
+				<td>'.$player->level.'</td>
+				<td>Access</td>
+				<td>'.$player->group->name.'</td>
+				<td>'.$player->online.'</td></tr>';
+		}
+		$start         = ceil($players_num / $per_page);
+
+		$data['menu'] .= '<ul id="pagination">';
+
+		if ($page + 1 <= 1)
+		{
+			$data['menu'] .= '<li class="previous-off">«First</li>';
+			$data['menu'] .= '<li class="previous-off">«Prev</li>';
+		}
+		else
+		{
+			$prev = $page;
+			$data['menu'] .= '<li p="1" class="previous"><a href="#">«First</a></li>';
+			$data['menu'] .= '<li p="'.$prev.'" class="previous"><a href="#">«Prev</a></li>';
+		}
+
+		if ($start < 7)
+		{
+			for ($i = 1; $i < $start + 1; $i++)
+			{
+				$data['menu'] .= $page + 1 == $i ? '<li class="active">'.$i.'</li>' : '<li p="'.$i.'"><a href="#">'.$i.'</a></li>';
+			}
+		}
+		elseif ($page < 4)
+		{
+			for ($i = 1; $i < 8; $i++)
+			{
+				$data['menu'] .= $page + 1 == $i ? '<li class="active">'.$i.'</li>' : '<li p="'.$i.'"><a href="#">'.$i.'</a></li>';
+			}
+		}
+		elseif (($page + 3)*$per_page > $players_num)
+		{
+			for ($i = 7; $i > 0; $i--)
+			{
+				$current = $start - $i;
+				$data['menu'] .= $page + 1 == $current ? '<li class="active">'.$current.'</li>' : '<li p="'.$current.'"><a href="#">'.$current.'</a></li>';
+			}
+		}
+		else
+		{
+			$begin = $page - 3;
+			for ($i = 0; $i < 7; $i++)
+			{
+				$current = $begin + $i;
+				$data['menu'] .= $page + 1 == $current ? '<li class="active">'.$current.'</li>' : '<li p="'.$current.'"><a href="#">'.$current.'</a></li>';
+			}
+		}
+
+		if ($page + 1 == $start)
+		{
+			$data['menu'] .= '<li class="next-off">Next»</li>';
+			$data['menu'] .= '<li class="next-off">Last»</li>';
+		}
+		else
+		{
+			$next = $page + 2;
+			$last = $start;
+			$data['menu'] .= '<li p="'.$next.'" class="next"><a href="#">Next»</a></li>';
+			$data['menu'] .= '<li p="'.$last.'" class="next"><a href="#">Last»</a></li>';
+		}
+
+		$data['menu']  .= '</ul>';
+		$data['result'] = 'success';
+		$data['max']    = $start;
+
+		$this->response($data);
+	}
+
 }
+
 /* End of file adminactions.php */

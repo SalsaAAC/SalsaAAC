@@ -25,9 +25,11 @@ abstract class Controller_Admin extends Controller {
 		parent::before();
 
 		\Config::load('config', true);	
-		\Config::load('salsa', true);		
+		\Config::load('salsa', true);
+		\Config::load('db', true);		
 		self::$theme_data['baseurl']   = \Config::get('config.base_url');
 		self::$theme_data['site_name'] = \Config::get('salsa.site_name');
+		self::$theme_data['script']    = '';
 
 		$uri_string = Uri::segments();
 		if (count($uri_string) != 1 OR $uri_string[0] != 'administration')
@@ -48,7 +50,7 @@ abstract class Controller_Admin extends Controller {
 
 		require_once(APPPATH.'vendor'.DS.'POT'.DS.'OTS.php');
 
-		switch (\Config::get('salsa.otserv.driver', 'POT::DB_MYSQL'))
+		switch (\Config::get('db.otserv.driver', 'POT::DB_MYSQL'))
 		{
 			case 'POT::DB_SQLITE':
 				$driver = POT::DB_SQLITE;
@@ -64,11 +66,11 @@ abstract class Controller_Admin extends Controller {
 		}
 		$config = array(
 			'driver'   => $driver,
-			'prefix'   => \Config::get('salsa.otserv.prefix', ''),
-			'host'     => \Config::get('salsa.otserv.host', 'localhost'),
-			'user'     => \Config::get('salsa.otserv.user', 'root'),
-			'password' => \Config::get('salsa.otserv.password', ''),
-			'database' => \Config::get('salsa.otserv.database', 'otserv'),
+			'prefix'   => \Config::get('db.otserv.table_prefix', ''),
+			'host'     => \Config::get('db.otserv.connection.hostname', 'localhost'),
+			'user'     => \Config::get('db.otserv.connection.username', 'root'),
+			'password' => \Config::get('db.otserv.connection.password', ''),
+			'database' => \Config::get('db.otserv.connection.database', 'otserv'),
 		);
 		POT::connect(null, $config);
 	}
