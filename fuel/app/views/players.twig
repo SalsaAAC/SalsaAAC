@@ -1,9 +1,45 @@
 {% extends "template.twig" %}
 
-{% block content %}		
+{% block content %}
+		<fieldset style="width:58%; float:left; margin-right: 10px; margin-left: 30px"> <!-- to make two field float next to one another, adjust values accordingly -->
+			<label style="width:100%">Search</label>
+			<select id="field" style="width:23%;  margin-top: 2px">
+				<option value="name">Name</option>
+				<option value="lastlogin">Last login</option>
+				<option value="level">Level</option>
+			</select>
+			<select id="operator" style="width:10%;  margin-top: 2px">
+				<option value="=">=</option>
+				<option value="!=">!=</option>
+				<option value=">">></option>
+				<option value="<"><</option>
+			</select>
+			<input type="hidden" id="filters_num" value="1" />
+			<a href="#" style="float:right; margin: 4px 8px 0 0"><img src="{{baseurl}}resources/admin/img/icons/plus_alt_16x16.png"></a>
+			<input id="filter_val" type="text" style="width:49%;float:right" value="">
+		</fieldset>
+		<fieldset style="width:35%; float:right; margin-right:20px"> <!-- to make two field float next to one another, adjust values accordingly -->
+			<label style="width:100%">Sort by</label>
+			<select id="sortby" style="width:55%;">
+				<option value="name">Name</option>
+				<option value="lastlogin">Last login</option>
+				<option value="level">Level</option>
+			</select>
+			<select id="order" style="width:30%; margin-bottom: 4px">
+				<option value="asc">Ascending</option>
+				<option value="desc">Descending</option>
+			</select>
+		</fieldset><div class="clear"></div>
+
 		<div id="loading" style="display: none"><img src="{{baseurl}}resources/admin/img/ajax-loader.gif"></div>
 		<article class="module width_full">
-		<header><h3 class="tabs_involved">Content</h3></header>
+		<header>
+			<h3 class="tabs_involved">Players</h3>
+			<input class="alt_btn" type="submit" value="Apply filters" style="float:right; margin: 5px">
+			<input type="submit" value="Go" style="float:right; margin: 5px; margin-right: 10px">
+			<input type="text" style="float:right; margin: 5px; width:20px; height:18px">
+			<div id="menu"></div>
+		</header>
 
 		<div class="tab_container">
 			<table class="tablesorter" cellspacing="0"> 
@@ -21,14 +57,28 @@
 			<tbody> 
 			</tbody> 
 			</table>
-				<div id="menu"></div>
-				<div class="clear"></div>
 			</div><!-- end of #tab1 -->		
 		</div><!-- end of .tab_container -->
 		
 		</article><!-- end of content manager article -->
 <script type="text/javascript">
 $(document).ready(function () {	
+	var filters = new Array();
+
+	function getfilters()
+	{
+		var output = '';
+		if ($('input#filter_val').val() == '')
+		{
+			output = '&field=name&operator==&filter_val=*';
+		}
+		else
+		{
+			output = '&field='+$('select#field').val()+'&operator='+$('select#operator').val()+'&filter_val='+$('input#filter_val').val();
+		}
+		return output;
+	}
+
 	function loadData(page)
 	{
 		$('#loading').css('margin-left', $('section[id="main"]').width()/2 - 20);
@@ -36,7 +86,7 @@ $(document).ready(function () {
 		$.ajax({
 			type: "POST",
 			url: "/adminactions/getplayerslist.json",
-			data: "page="+page,
+			data: "page="+page+"&sortby="+$('select#sortby').val()+"&order="+$('select#order').val()+getfilters(),
 			async: false,
     			dataType: "json",
 			success: function(data)
@@ -47,6 +97,7 @@ $(document).ready(function () {
 				$('#sidebar').height($(document).height()-90);
 				$('#main').height($(document).height()-90);
 				$("#menu").css('margin-left', $(".tab_container").width()/2 - 106 - 9*data.max);
+				$("#menu").css('width', 200 + 18*data.max);
 			}
 		});
 	}
@@ -55,6 +106,10 @@ $(document).ready(function () {
 	$('#menu ul#pagination li a').live('click',function(){
 		var page = $(this).parent().attr('p');
 		loadData(page);
+	});
+	$('article.module header input.alt_btn').live('click',function(){
+		loadData(1);
+		return true;
 	});
 });
 </script>

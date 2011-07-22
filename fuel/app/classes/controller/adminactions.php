@@ -213,19 +213,34 @@ class Controller_Adminactions extends Controller_Rest {
 	public function post_getplayerslist()
 	{
 		$page         = Input::post('page');
-		$cur_page     = $page;
-		$order	      = 'name';
+		$sort	      = Input::post('sortby');
+		$order	      = Input::post('order');
+		$where	      = Input::post('field');
+		$where_op     = Input::post('operator');
+		$where_val    = Input::post('filter_val');
 		$page        -= 1;
 		$per_page     = 20;
 		$start        = $page * $per_page;
 		$data['message'] = '';
 		$data['menu'] = '';
 
-		$players = Model_Player::find('all', array(
-			'order_by' => array($order => 'asc'),
-			'limit'    => $per_page,
-			'offset'   => $start
-		));
+		if ($where_val == '*')
+		{
+			$players = Model_Player::find('all', array(
+				'order_by' => array($sort => $order),
+				'limit'    => $per_page,
+				'offset'   => $start
+			));
+		}
+		else
+		{
+			$players = Model_Player::find('all', array(
+				'where'    => array(array($where, $where_op, $where_val)),
+				'order_by' => array($sort => $order),
+				'limit'    => $per_page,
+				'offset'   => $start
+			));
+		}
 
 		/*
 		$players_num = Model_Statistic::find('first', array(
@@ -233,80 +248,85 @@ class Controller_Adminactions extends Controller_Rest {
 		));
 		*/
 		$players_num = count(Model_Player::find('all'));
-
-		foreach($players as $player)
+		
+		if (count($players) <= 0)
 		{
-			$data['message'] .= '<tr><td>'.$player->name.'</td>
-				<td>Account</td>
-				<td>'.date("jS F Y", $player->lastlogin).'</td>
-				<td>'.$player->level.'</td>
-				<td>Access</td>
-				<td>'.$player->group->name.'</td>
-				<td>'.$player->online.'</td></tr>';
-		}
-		$start         = ceil($players_num / $per_page);
-
-		$data['menu'] .= '<ul id="pagination">';
-
-		if ($page + 1 <= 1)
-		{
-			$data['menu'] .= '<li class="previous-off">«First</li>';
-			$data['menu'] .= '<li class="previous-off">«Prev</li>';
+			$data['message'] = '<h4 class="alert_info" style="margin: 5px 0 5px 5px">Nothing found</h4>';
 		}
 		else
 		{
-			$prev = $page;
-			$data['menu'] .= '<li p="1" class="previous"><a href="#">«First</a></li>';
-			$data['menu'] .= '<li p="'.$prev.'" class="previous"><a href="#">«Prev</a></li>';
-		}
+			foreach($players as $player)
+			{
+				$data['message'] .= '<tr><td>'.$player->name.'</td>
+					<td>Account</td>
+					<td>'.date("jS F Y", $player->lastlogin).'</td>
+					<td>'.$player->level.'</td>
+					<td>Access</td>
+					<td>'.$player->group->name.'</td>
+					<td>'.$player->online.'</td></tr>';
+			}
+			$start         = ceil($players_num / $per_page);
+			$data['menu'] .= '<ul id="pagination">';
 
-		if ($start < 7)
-		{
-			for ($i = 1; $i < $start + 1; $i++)
+			if ($page + 1 <= 1)
 			{
-				$data['menu'] .= $page + 1 == $i ? '<li class="active">'.$i.'</li>' : '<li p="'.$i.'"><a href="#">'.$i.'</a></li>';
+				$data['menu'] .= '<li class="previous-off">«First</li>';
+				$data['menu'] .= '<li class="previous-off">«Prev</li>';
 			}
-		}
-		elseif ($page < 4)
-		{
-			for ($i = 1; $i < 8; $i++)
+			else
 			{
-				$data['menu'] .= $page + 1 == $i ? '<li class="active">'.$i.'</li>' : '<li p="'.$i.'"><a href="#">'.$i.'</a></li>';
+				$prev = $page;
+				$data['menu'] .= '<li p="1" class="previous"><a href="#">«First</a></li>';
+				$data['menu'] .= '<li p="'.$prev.'" class="previous"><a href="#">«Prev</a></li>';
 			}
-		}
-		elseif (($page + 3)*$per_page > $players_num)
-		{
-			for ($i = 7; $i > 0; $i--)
-			{
-				$current = $start - $i;
-				$data['menu'] .= $page + 1 == $current ? '<li class="active">'.$current.'</li>' : '<li p="'.$current.'"><a href="#">'.$current.'</a></li>';
-			}
-		}
-		else
-		{
-			$begin = $page - 3;
-			for ($i = 0; $i < 7; $i++)
-			{
-				$current = $begin + $i;
-				$data['menu'] .= $page + 1 == $current ? '<li class="active">'.$current.'</li>' : '<li p="'.$current.'"><a href="#">'.$current.'</a></li>';
-			}
-		}
 
-		if ($page + 1 == $start)
-		{
-			$data['menu'] .= '<li class="next-off">Next»</li>';
-			$data['menu'] .= '<li class="next-off">Last»</li>';
-		}
-		else
-		{
-			$next = $page + 2;
-			$last = $start;
-			$data['menu'] .= '<li p="'.$next.'" class="next"><a href="#">Next»</a></li>';
-			$data['menu'] .= '<li p="'.$last.'" class="next"><a href="#">Last»</a></li>';
+			if ($start < 7)
+			{
+				for ($i = 1; $i < $start + 1; $i++)
+				{
+					$data['menu'] .= $page + 1 == $i ? '<li class="active">'.$i.'</li>' : '<li p="'.$i.'"><a href="#">'.$i.'</a></li>';
+				}
+			}
+			elseif ($page < 4)
+			{
+				for ($i = 1; $i < 8; $i++)
+				{
+					$data['menu'] .= $page + 1 == $i ? '<li class="active">'.$i.'</li>' : '<li p="'.$i.'"><a href="#">'.$i.'</a></li>';
+				}
+			}
+			elseif (($page + 3)*$per_page > $players_num)
+			{
+				for ($i = 7; $i > 0; $i--)
+				{
+					$current = $start - $i;
+					$data['menu'] .= $page + 1 == $current ? '<li class="active">'.$current.'</li>' : '<li p="'.$current.'"><a href="#">'.$current.'</a></li>';
+				}
+			}
+			else
+			{
+				$begin = $page - 3;
+				for ($i = 0; $i < 7; $i++)
+				{
+					$current = $begin + $i;
+					$data['menu'] .= $page + 1 == $current ? '<li class="active">'.$current.'</li>' : '<li p="'.$current.'"><a href="#">'.$current.'</a></li>';
+				}
+			}
+
+			if ($page + 1 == $start)
+			{
+				$data['menu'] .= '<li class="next-off">Next»</li>';
+				$data['menu'] .= '<li class="next-off">Last»</li>';
+			}
+			else
+			{
+				$next = $page + 2;
+				$last = $start;
+				$data['menu'] .= '<li p="'.$next.'" class="next"><a href="#">Next»</a></li>';
+				$data['menu'] .= '<li p="'.$last.'" class="next"><a href="#">Last»</a></li>';
+			}
 		}
 
 		$data['menu']  .= '</ul>';
-		$data['result'] = 'success';
 		$data['max']    = $start;
 
 		$this->response($data);
