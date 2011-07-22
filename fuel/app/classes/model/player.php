@@ -28,6 +28,24 @@ class Model_Player extends Orm\Model {
 			'key_to'         => 'id',
 			'cascade_save'   => true,
 			'cascade_delete' => false,
+		),
+		'account' => array(
+			'key_from'       => 'account_id',
+			'model_to'       => 'Model_Account',
+			'key_to'         => 'id',
+			'cascade_save'   => true,
+			'cascade_delete' => false,
+		)
+	);
+
+
+	protected static $_has_one = array(
+		'ban' => array(
+			'key_from'       => 'id',
+			'model_to'       => 'Model_Ban',
+			'key_to'         => 'value',
+			'cascade_save'   => true,
+			'cascade_delete' => false,
 		)
 	);
 
