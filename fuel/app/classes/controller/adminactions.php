@@ -216,8 +216,9 @@ class Controller_Adminactions extends Controller_Rest {
 		$sort	      = Input::post('sortby');
 		$order	      = Input::post('order');
 		$wheres       = array();
+		$related      = array();
 		$page        -= 1;
-		$per_page     = 20;
+		$per_page     = 15;
 		$start        = $page * $per_page;
 		$data['message'] = '';
 
@@ -318,7 +319,7 @@ class Controller_Adminactions extends Controller_Rest {
 		}
 		elseif (($page + 3)*$per_page > $players_num)
 		{
-			for ($i = 7; $i > 0; $i--)
+			for ($i = 6; $i > -1; $i--)
 			{
 				$current = $start - $i;
 				$menu .= $page + 1 == $current ? '<li class="active">'.$current.'</li>' : '<li p="'.$current.'"><a href="#">'.$current.'</a></li>';
@@ -327,7 +328,7 @@ class Controller_Adminactions extends Controller_Rest {
 		else
 		{
 			$begin = $page - 3;
-			for ($i = 0; $i < 7; $i++)
+			for ($i = 1; $i < 8; $i++)
 			{
 				$current = $begin + $i;
 				$menu .= $page + 1 == $current ? '<li class="active">'.$current.'</li>' : '<li p="'.$current.'"><a href="#">'.$current.'</a></li>';
