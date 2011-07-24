@@ -240,6 +240,12 @@ class Controller_Adminactions extends Controller_Rest {
 				'limit'    => $per_page,
 				'offset'   => $start
 			));
+			/*
+			$players_num = Model_Statistic::find('first', array(
+				'where' => array('name', 'players_num')
+			));
+			*/
+			$players_num = count(Model_Player::find('all'));
 		}
 		else
 		{
@@ -249,14 +255,9 @@ class Controller_Adminactions extends Controller_Rest {
 				'limit'    => $per_page,
 				'offset'   => $start
 			));
+			$players_num = count($players);
 		}
 
-		/*
-		$players_num = Model_Statistic::find('first', array(
-			'where' => array('name', 'players_num')
-		));
-		*/
-		$players_num = count(Model_Player::find('all'));
 		
 		if (count($players) <= 0)
 		{
