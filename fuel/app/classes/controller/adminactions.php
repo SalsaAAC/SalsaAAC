@@ -215,21 +215,25 @@ class Controller_Adminactions extends Controller_Rest {
 		$page         = Input::post('page');
 		$sort	      = Input::post('sortby');
 		$order	      = Input::post('order');
-		$where	      = Input::post('field');
-		$where_op     = Input::post('operator');
-		$where_vals   = Input::post('filter_vals');
-		$where_val    = Input::post('filter_val');
+		$wheres       = array();
 		$page        -= 1;
 		$per_page     = 20;
 		$start        = $page * $per_page;
 		$data['message'] = '';
 
-		if ($where == 'lastlogin')
+		for ($i = 1; $i < 6; $i++)
 		{
-			$where_val = strtotime($where_val);
+			$where	      = Input::post('field'.$i);
+			$where_op     = Input::post('operator'.$i);
+			$where_val    = Input::post('filter_val'.$i);
+			if ( ! empty($where) AND ! empty($where_op) AND  ! empty($where_val))
+			{
+				if ($where == 'lastlogin') $where_val = strtotime($where_val);
+				$wheres[] = array($where, $where_op, $where_val);
+			}
 		}
 
-		if ($where_val == '*')
+		if (empty($wheres))
 		{
 			$players = Model_Player::find('all', array(
 				'order_by' => array($sort => $order),
@@ -240,7 +244,7 @@ class Controller_Adminactions extends Controller_Rest {
 		else
 		{
 			$players = Model_Player::find('all', array(
-				'where'    => array(array($where, $where_op, $where_val)),
+				'where'    => array($wheres),
 				'order_by' => array($sort => $order),
 				'limit'    => $per_page,
 				'offset'   => $start
@@ -257,6 +261,7 @@ class Controller_Adminactions extends Controller_Rest {
 		if (count($players) <= 0)
 		{
 			$data['message'] = '<h4 class="alert_info" style="margin: 5px 0 5px 5px">Nothing found</h4>';
+			$data['menu']    = '';
 		}
 		else
 		{

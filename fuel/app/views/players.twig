@@ -105,7 +105,7 @@ $(document).ready(function () {
 
 	loadData(1);
 
-	$('select#field').live('change',function(){
+	$('select[id^="field"]').live('change',function(){
 		var number = $(this).parent().attr('id');
 		if ($(this).val() == 'lastlogin')
 		{
