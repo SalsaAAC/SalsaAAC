@@ -38,7 +38,7 @@
 			<h3 class="tabs_involved">Players</h3>
 			<input class="alt_btn" type="submit" value="Apply filters" style="float:right; margin: 5px">
 			<input id="go" type="submit" value="Go" style="float:right; margin: 5px; margin-right: 10px">
-			<input type="text" style="float:right; margin: 5px; width:20px; height:18px">
+			<input id="gopage" type="text" style="float:right; margin: 5px; width:20px; height:18px">
 			<div id="menu"></div>
 		</header>
 
@@ -64,6 +64,7 @@
 <script type="text/javascript">
 $(document).ready(function () {	
 	var filters_num = 1;
+	var pages = 0;
 
 	function getfilters()
 	{
@@ -98,7 +99,8 @@ $(document).ready(function () {
 				$('#sidebar').height($(document).height()-90);
 				$('#main').height($(document).height()-90);
 				$("#menu").css('margin-left', $(".tab_container").width()/2 - 106 - 9*data.max);
-				$("#menu").css('width', 200 + 18*data.max);
+				$("#menu").css('width', 210 + 10*data.max);
+				pages = data.max;
 			}
 		});
 	}
@@ -133,6 +135,14 @@ $(document).ready(function () {
 	$('fieldset a#remove').live('click',function(){
 		$(this).parent().remove();
 		filters_num -= 1;		
+	});
+
+	$('input#go').live('click',function(){
+		if ($('input#gopage').val() > pages) return false;
+		else
+		{
+			loadData($('input#gopage').val());		
+		}
 	});
 
 	$('fieldset a#add').live('click',function(){

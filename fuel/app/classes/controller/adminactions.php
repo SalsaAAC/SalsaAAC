@@ -218,7 +218,7 @@ class Controller_Adminactions extends Controller_Rest {
 		$wheres       = array();
 		$related      = array();
 		$page        -= 1;
-		$per_page     = 15;
+		$per_page     = 5;
 		$start        = $page * $per_page;
 		$data['message'] = '';
 
