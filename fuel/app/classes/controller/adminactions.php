@@ -217,12 +217,17 @@ class Controller_Adminactions extends Controller_Rest {
 		$order	      = Input::post('order');
 		$where	      = Input::post('field');
 		$where_op     = Input::post('operator');
+		$where_vals   = Input::post('filter_vals');
 		$where_val    = Input::post('filter_val');
 		$page        -= 1;
 		$per_page     = 20;
 		$start        = $page * $per_page;
 		$data['message'] = '';
-		$data['menu'] = '';
+
+		if ($where == 'lastlogin')
+		{
+			$where_val = strtotime($where_val);
+		}
 
 		if ($where_val == '*')
 		{
@@ -258,78 +263,83 @@ class Controller_Adminactions extends Controller_Rest {
 			foreach($players as $player)
 			{
 				$data['message'] .= '<tr><td>'.$player->name.'</td>
-					<td>Account</td>
+					<td>'.$player->account->name.'</td>
 					<td>'.date("jS F Y", $player->lastlogin).'</td>
 					<td>'.$player->level.'</td>
-					<td>Access</td>
 					<td>'.$player->group->name.'</td>
 					<td>'.$player->online.'</td></tr>';
 			}
 			$start         = ceil($players_num / $per_page);
-			$data['menu'] .= '<ul id="pagination">';
+			$data['menu']  = self::pagination($start, $page, $per_page, $players_num);
+		}
 
-			if ($page + 1 <= 1)
-			{
-				$data['menu'] .= '<li class="previous-off">«First</li>';
-				$data['menu'] .= '<li class="previous-off">«Prev</li>';
-			}
-			else
-			{
-				$prev = $page;
-				$data['menu'] .= '<li p="1" class="previous"><a href="#">«First</a></li>';
-				$data['menu'] .= '<li p="'.$prev.'" class="previous"><a href="#">«Prev</a></li>';
-			}
+		$data['max'] = $start;
 
-			if ($start < 7)
-			{
-				for ($i = 1; $i < $start + 1; $i++)
-				{
-					$data['menu'] .= $page + 1 == $i ? '<li class="active">'.$i.'</li>' : '<li p="'.$i.'"><a href="#">'.$i.'</a></li>';
-				}
-			}
-			elseif ($page < 4)
-			{
-				for ($i = 1; $i < 8; $i++)
-				{
-					$data['menu'] .= $page + 1 == $i ? '<li class="active">'.$i.'</li>' : '<li p="'.$i.'"><a href="#">'.$i.'</a></li>';
-				}
-			}
-			elseif (($page + 3)*$per_page > $players_num)
-			{
-				for ($i = 7; $i > 0; $i--)
-				{
-					$current = $start - $i;
-					$data['menu'] .= $page + 1 == $current ? '<li class="active">'.$current.'</li>' : '<li p="'.$current.'"><a href="#">'.$current.'</a></li>';
-				}
-			}
-			else
-			{
-				$begin = $page - 3;
-				for ($i = 0; $i < 7; $i++)
-				{
-					$current = $begin + $i;
-					$data['menu'] .= $page + 1 == $current ? '<li class="active">'.$current.'</li>' : '<li p="'.$current.'"><a href="#">'.$current.'</a></li>';
-				}
-			}
+		$this->response($data);
+	}
 
-			if ($page + 1 == $start)
+	private function pagination($start, $page, $per_page, $players_num)
+	{
+		$menu = '<ul id="pagination">';
+
+		if ($page + 1 <= 1)
+		{
+			$menu .= '<li class="previous-off">«First</li>';
+			$menu .= '<li class="previous-off">«Prev</li>';
+		}
+		else
+		{
+			$prev = $page;
+			$menu .= '<li p="1" class="previous"><a href="#">«First</a></li>';
+			$menu .= '<li p="'.$prev.'" class="previous"><a href="#">«Prev</a></li>';
+		}
+
+		if ($start < 7)
+		{
+			for ($i = 1; $i < $start + 1; $i++)
 			{
-				$data['menu'] .= '<li class="next-off">Next»</li>';
-				$data['menu'] .= '<li class="next-off">Last»</li>';
+				$menu .= $page + 1 == $i ? '<li class="active">'.$i.'</li>' : '<li p="'.$i.'"><a href="#">'.$i.'</a></li>';
 			}
-			else
+		}
+		elseif ($page < 4)
+		{
+			for ($i = 1; $i < 8; $i++)
 			{
-				$next = $page + 2;
-				$last = $start;
-				$data['menu'] .= '<li p="'.$next.'" class="next"><a href="#">Next»</a></li>';
-				$data['menu'] .= '<li p="'.$last.'" class="next"><a href="#">Last»</a></li>';
+				$menu .= $page + 1 == $i ? '<li class="active">'.$i.'</li>' : '<li p="'.$i.'"><a href="#">'.$i.'</a></li>';
+			}
+		}
+		elseif (($page + 3)*$per_page > $players_num)
+		{
+			for ($i = 7; $i > 0; $i--)
+			{
+				$current = $start - $i;
+				$menu .= $page + 1 == $current ? '<li class="active">'.$current.'</li>' : '<li p="'.$current.'"><a href="#">'.$current.'</a></li>';
+			}
+		}
+		else
+		{
+			$begin = $page - 3;
+			for ($i = 0; $i < 7; $i++)
+			{
+				$current = $begin + $i;
+				$menu .= $page + 1 == $current ? '<li class="active">'.$current.'</li>' : '<li p="'.$current.'"><a href="#">'.$current.'</a></li>';
 			}
 		}
 
-		$data['menu']  .= '</ul>';
-		$data['max']    = $start;
-
-		$this->response($data);
+		if ($page + 1 == $start)
+		{
+			$menu .= '<li class="next-off">Next»</li>';
+			$menu .= '<li class="next-off">Last»</li>';
+		}
+		else
+		{
+			$next = $page + 2;
+			$last = $start;
+			$menu .= '<li p="'.$next.'" class="next"><a href="#">Next»</a></li>';
+			$menu .= '<li p="'.$last.'" class="next"><a href="#">Last»</a></li>';
+		}
+		$menu  .= '</ul>';
+		return $menu;
 	}
 
 }

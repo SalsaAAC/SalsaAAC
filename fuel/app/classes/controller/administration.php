@@ -142,26 +142,11 @@ class Controller_Administration extends Controller_Admin {
 		$this->response->body = View::factory('players.twig', self::$theme_data);
 	}
 
-	public function action_test()
-	{
-		$players = new OTS_Players_List();
-		$players->orderBy(new OTS_SQLField('name', 'players'));
-		$players->setLimit(10);
-		$players->setOffset(0);
-
-		foreach($players as $player)
-		{
-			$account = $player->getAccount();
-			$group   = $player->getGroup();
-			echo '<tr><td>'.$player->getName().'</td>
-				<td>'.$account->getName().'</td>
-				<td>'.date("jS F Y", $player->getLastLogin()).'</td>
-				<td>'.$player->getLevel().'</td>
-				<td>'.$account->getAccess().'</td>
-				<td>'.$group->getName().'</td>
-				<td>'.$player->isOnline().'</td></tr>';
-		}	
+	public function action_accounts()
+	{		
+		$this->response->body = View::factory('accounts.twig', self::$theme_data);
 	}
+	
 
 	public function action_name()
 	{
