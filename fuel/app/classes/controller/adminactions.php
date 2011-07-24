@@ -255,7 +255,9 @@ class Controller_Adminactions extends Controller_Rest {
 				'limit'    => $per_page,
 				'offset'   => $start
 			));
-			$players_num = count($players);
+			$players_num = count(Model_Player::find('all', array(
+				'where'    => array($wheres)
+			)));
 		}
 
 		
