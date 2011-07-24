@@ -4,12 +4,12 @@
 		<fieldset id="search" style="width:58%; float:left; margin-right: 10px; margin-left: 30px"> <!-- to make two field float next to one another, adjust values accordingly -->
 			<label style="width:100%">Search</label>
 			<div id="1">
-				<select id="field" style="width:23%;  margin-top: 2px">
+				<select id="field1" style="width:23%;  margin-top: 2px">
 					<option value="name">Name</option>
 					<option value="lastlogin">Last login</option>
 					<option value="level">Level</option>
 				</select>
-				<select id="operator" style="width:10%;  margin-top: 2px">
+				<select id="operator1" style="width:10%;  margin-top: 2px">
 					<option value="=">=</option>
 					<option value="!=">!=</option>
 					<option value=">">></option>
@@ -63,20 +63,20 @@
 		</article><!-- end of content manager article -->
 <script type="text/javascript">
 $(document).ready(function () {	
-	var filters = new Array();
 	var filters_num = 1;
 
 	function getfilters()
 	{
 		var output = '';
-		if ($('input#filter_val1').val() == '')
-		{
-			output = '&field=name&operator==&filter_val=*&filter_vals=1';
-		}
-		else
-		{
-			output = '&field='+$('select#field').val()+'&operator='+$('select#operator').val()+'&filter_val='+$('input#filter_val').val()+'&filter_vals='+filters_num;
-		}
+
+		$('fieldset#search div').each(function(index) {
+			var id = $(this).attr('id');
+			if ($('input#filter_val'+id).val() != '')
+			{
+				output += '&field'+id+'='+$('select#field'+id).val()+'&operator'+id+'='+$('select#operator'+id).val()+'&filter_val'+id+'='+$('input#filter_val'+id).val();
+			}
+		});
+
 		return output;
 	}
 
@@ -87,7 +87,7 @@ $(document).ready(function () {
 		$.ajax({
 			type: "POST",
 			url: "/adminactions/getplayerslist.json",
-			data: "page="+page+"&sortby="+$('select#sortby').val()+"&order="+$('select#order').val()+getfilters(),
+			data: "page="+page+"&sortby="+$('select#sortby').val()+"&order="+$('select#order').val()+getfilters()+'&filter_vals='+filters_num,
 			async: false,
     			dataType: "json",
 			success: function(data)
@@ -139,7 +139,7 @@ $(document).ready(function () {
 		if (filters_num < 5)
 		{
 			filters_num += 1;
-			$('fieldset#search').append('<div id="'+filters_num+'"><select id="field" style="width:23%;  margin-top: 8px"><option value="name">Name</option><option value="lastlogin">Last login</option><option value="level">Level</option>	</select><select id="operator" style="width:10%;  margin-top: 8px"><option value="=">=</option>	<option value="!=">!=</option><option value=">">></option><option value="<"><</option></select>'+
+			$('fieldset#search').append('<div id="'+filters_num+'"><select id="field'+filters_num+'" style="width:23%;  margin-top: 8px"><option value="name">Name</option><option value="lastlogin">Last login</option><option value="level">Level</option></select><select id="operator'+filters_num+'" style="width:10%;  margin-top: 8px"><option value="=">=</option>	<option value="!=">!=</option><option value=">">></option><option value="<"><</option></select>'+
 			'<a href="#" id="remove" style="float:right; margin: 10px 8px 0 0"><img src="{{baseurl}}resources/admin/img/icons/x_alt_16x16.png"></a><input id="filter_val'+filters_num+'" type="text" style="width:49%;float:right; margin-top:6px" value=""></div>');
 		}
 	});
