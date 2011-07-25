@@ -60,7 +60,7 @@ class Controller_Adminactions extends Controller_Rest {
 
 	public function post_saveconfigs()
 	{
-		//'Classes declarations cannot be nested fool!' - that's why so many $temp's
+		//'Classes declarations cannot be nested fool!' - that's why so many $temps
 
 		\Config::load('salsa', true);
 		\Config::load('db', true);
@@ -212,55 +212,46 @@ class Controller_Adminactions extends Controller_Rest {
 
 	public function post_getplayerslist()
 	{
-		$page         = Input::post('page');
-		$sort	      = Input::post('sortby');
-		$order	      = Input::post('order');
-		$wheres       = array();
-		$related      = array();
-		$page        -= 1;
-		$per_page     = 5;
-		$start        = $page * $per_page;
+		$page     = Input::post('page');
+		$sort	  = Input::post('sortby');
+		$order	  = Input::post('order');
+		$wheres   = array();
+		$relates  = array();
+		$page    -= 1;
+		$per_page = 15;
+		$start    = $page * $per_page;
 		$data['message'] = '';
 
 		for ($i = 1; $i < 6; $i++)
 		{
-			$where	      = Input::post('field'.$i);
-			$where_op     = Input::post('operator'.$i);
-			$where_val    = Input::post('filter_val'.$i);
-			if ( ! empty($where) AND ! empty($where_op) AND  ! empty($where_val))
+			$where	   = Input::post('field'.$i);
+			$where_op  = Input::post('operator'.$i);
+			$where_val = Input::post('filter_val'.$i);
+			if ( ! empty($where) AND ! empty($where_op) AND ! empty($where_val))
 			{
-				if ($where == 'lastlogin') $where_val = strtotime($where_val);
-				$wheres[] = array($where, $where_op, $where_val);
+				if ($where == 'group' OR $where == 'account')
+				{
+					$relates[$where]['where'][] = array('name', $where_op, $where_val);
+				}
+				else
+				{
+					if ($where == 'lastlogin') $where_val = strtotime($where_val);
+					$wheres[] = array($where, $where_op, $where_val);
+				}
 			}
 		}
 
-		if (empty($wheres))
-		{
-			$players = Model_Player::find('all', array(
-				'order_by' => array($sort => $order),
-				'limit'    => $per_page,
-				'offset'   => $start
-			));
-			/*
-			$players_num = Model_Statistic::find('first', array(
-				'where' => array('name', 'players_num')
-			));
-			*/
-			$players_num = count(Model_Player::find('all'));
-		}
-		else
-		{
-			$players = Model_Player::find('all', array(
-				'where'    => array($wheres),
-				'order_by' => array($sort => $order),
-				'limit'    => $per_page,
-				'offset'   => $start
-			));
-			$players_num = count(Model_Player::find('all', array(
-				'where'    => array($wheres)
-			)));
-		}
-
+		$players = Model_Player::find('all', array(
+			'where'    => $wheres,
+			'related'  => $relates,
+			'order_by' => array($sort => $order),
+			'limit'    => $per_page,
+			'offset'   => $start
+		));
+		$players_num = count(Model_Player::find('all', array(
+			'where'    => $wheres,
+			'related'  => $relates
+		)));
 		
 		if (count($players) <= 0)
 		{
@@ -269,7 +260,7 @@ class Controller_Adminactions extends Controller_Rest {
 		}
 		else
 		{
-			foreach($players as $player)
+			foreach ($players as $player)
 			{
 				$data['message'] .= '<tr><td>'.$player->name.'</td>
 					<td>'.$player->account->name.'</td>
@@ -278,16 +269,15 @@ class Controller_Adminactions extends Controller_Rest {
 					<td>'.$player->group->name.'</td>
 					<td>'.$player->online.'</td></tr>';
 			}
-			$start         = ceil($players_num / $per_page);
-			$data['menu']  = self::pagination($start, $page, $per_page, $players_num);
+			$start        = ceil($players_num / $per_page);
+			$data['menu'] = self::pagination($start, $page, $per_page, $players_num);
 		}
 
 		$data['max'] = $start;
-
 		$this->response($data);
 	}
 
-	private function pagination($start, $page, $per_page, $players_num)
+	private function pagination($start, $page, $per_page, $items_num)
 	{
 		$menu = '<ul id="pagination">';
 
@@ -317,7 +307,7 @@ class Controller_Adminactions extends Controller_Rest {
 				$menu .= $page + 1 == $i ? '<li class="active">'.$i.'</li>' : '<li p="'.$i.'"><a href="#">'.$i.'</a></li>';
 			}
 		}
-		elseif (($page + 3)*$per_page > $players_num)
+		elseif (($page + 3)*$per_page > $items_num)
 		{
 			for ($i = 6; $i > -1; $i--)
 			{

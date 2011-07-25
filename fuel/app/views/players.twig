@@ -6,8 +6,10 @@
 			<div id="1">
 				<select id="field1" style="width:23%;  margin-top: 2px">
 					<option value="name">Name</option>
+					<option value="account">Account</option>
 					<option value="lastlogin">Last login</option>
 					<option value="level">Level</option>
+					<option value="group">Group</option>
 				</select>
 				<select id="operator1" style="width:10%;  margin-top: 2px">
 					<option value="=">=</option>
@@ -99,7 +101,7 @@ $(document).ready(function () {
 				$('#sidebar').height($(document).height()-90);
 				$('#main').height($(document).height()-90);
 				$("#menu").css('margin-left', $(".tab_container").width()/2 - 106 - 9*data.max);
-				$("#menu").css('width', 210 + 10*data.max);
+				$("#menu").css('width', 210 + 14*data.max);
 				pages = data.max;
 			}
 		});
@@ -138,10 +140,11 @@ $(document).ready(function () {
 	});
 
 	$('input#go').live('click',function(){
-		if ($('input#gopage').val() > pages) return false;
+		var page = $('input#gopage').val();
+		if (isNaN(page) || page > pages || page <= 0) return false;
 		else
 		{
-			loadData($('input#gopage').val());		
+			loadData(page);		
 		}
 	});
 
@@ -149,7 +152,7 @@ $(document).ready(function () {
 		if (filters_num < 5)
 		{
 			filters_num += 1;
-			$('fieldset#search').append('<div id="'+filters_num+'"><select id="field'+filters_num+'" style="width:23%;  margin-top: 8px"><option value="name">Name</option><option value="lastlogin">Last login</option><option value="level">Level</option></select><select id="operator'+filters_num+'" style="width:10%;  margin-top: 8px"><option value="=">=</option>	<option value="!=">!=</option><option value=">">></option><option value="<"><</option></select>'+
+			$('fieldset#search').append('<div id="'+filters_num+'"><select id="field'+filters_num+'" style="width:23%;  margin-top: 8px"><option value="name">Name</option><option value="account">Account</option><option value="lastlogin">Last login</option><option value="level">Level</option><option value="group">Group</option></select><select id="operator'+filters_num+'" style="width:10%;  margin-top: 8px"><option value="=">=</option>	<option value="!=">!=</option><option value=">">></option><option value="<"><</option></select>'+
 			'<a href="#" id="remove" style="float:right; margin: 10px 8px 0 0"><img src="{{baseurl}}resources/admin/img/icons/x_alt_16x16.png"></a><input id="filter_val'+filters_num+'" type="text" style="width:49%;float:right; margin-top:6px" value=""></div>');
 		}
 	});
