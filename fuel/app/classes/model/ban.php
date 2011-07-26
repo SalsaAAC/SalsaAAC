@@ -23,14 +23,14 @@ class Model_Ban extends Orm\Model {
 
 	protected static $_belongs_to = array(
 	    	'account' => array(
-			'key_from'       => 'type',
+			'key_from'       => 'value',
 			'model_to'       => 'Model_Account',
 			'key_to'         => 'name',
 			'cascade_save'   => true,
 			'cascade_delete' => false,
     		),
 	    	'player' => array(
-			'key_from'       => 'type',
+			'key_from'       => 'value',
 			'model_to'       => 'Model_Player',
 			'key_to'         => 'id',
 			'cascade_save'   => true,

@@ -18,6 +18,7 @@
 
 class Controller_Adminactions extends Controller_Rest {
 
+
 	public function before()
 	{
 		//parent::before();
@@ -30,8 +31,10 @@ class Controller_Adminactions extends Controller_Rest {
 			));
 		}
 
+		\Config::load('config', true);
 		\Config::load('db', true);
 		require_once(APPPATH.'vendor'.DS.'POT'.DS.'OTS.php');
+		
 
 		switch (\Config::get('db.otserv.driver', 'POT::DB_MYSQL'))
 		{
@@ -260,14 +263,34 @@ class Controller_Adminactions extends Controller_Rest {
 		}
 		else
 		{
+			$baseurl = \Config::get('config.base_url', '/');
 			foreach ($players as $player)
 			{
-				$data['message'] .= '<tr><td>'.$player->name.'</td>
-					<td>'.$player->account->name.'</td>
+				$flags = '';
+				$account_ban = Model_Ban::find('first', array(
+				    'where' => array(array('value', $player->account->name))
+				));
+				$player_ban = Model_Ban::find('first', array(
+				    'where' => array(array('value', $player->id))
+				));
+				if ($player->online) $flags .= '<img src="'.$baseurl.'resources/admin/img/icons/online.png" alt="online" title="Online"></img>';
+				if ($player->account->warnings > 0) $flags .= '<img src="'.$baseurl.'resources/admin/img/icons/warned.png" alt="warned" title="Warned"></img>';
+				if (count($account_ban) > 0)
+				{
+					$flags .= '<a href="/administration/ban/'.$account_ban->id.'"><img src="'.$baseurl.'resources/admin/img/icons/banned.png" alt="banned" title="Banned"></img></a>';
+				}
+				elseif (count($player_ban) > 0)
+				{
+					$flags .= '<a href="/administration/ban/'.$player_ban->id.'"><img src="'.$baseurl.'resources/admin/img/icons/banned.png" alt="banned" title="Banned"></img></a>';
+				}
+				if (empty($flags)) $flags = '-';
+
+				$data['message'] .= '<tr><td><a href="/administration/player/'.$player->id.'">'.$player->name.'</a></td>
+					<td><a href="/administration/account/'.$player->account->id.'">'.$player->account->name.'</a></td>
 					<td>'.date("jS F Y", $player->lastlogin).'</td>
 					<td>'.$player->level.'</td>
 					<td>'.$player->group->name.'</td>
-					<td>'.$player->online.'</td></tr>';
+					<td>'.$flags.'</td></tr>';
 			}
 			$start        = ceil($players_num / $per_page);
 			$data['menu'] = self::pagination($start, $page, $per_page, $players_num);
@@ -275,6 +298,19 @@ class Controller_Adminactions extends Controller_Rest {
 
 		$data['max'] = $start;
 		$this->response($data);
+	}
+
+	public function post_getgroupslist()
+	{
+		$number = Input::post('number');
+		$output['select'] = '<select id="filter_val'.$number.'" style="width:45%;float:right">';
+		$groups = Model_Group::find('all');
+		foreach ($groups as $group)
+		{
+			$output['select'] .= '<option value="'.$group->name.'">'.$group->name.'</option>';
+		}
+		$output['select'] .= '</select>';
+		$this->response($output);
 	}
 
 	private function pagination($start, $page, $per_page, $items_num)

@@ -1,7 +1,7 @@
 {% extends "template.twig" %}
 
 {% block content %}
-		<fieldset id="search" style="width:58%; float:left; margin-right: 10px; margin-left: 30px"> <!-- to make two field float next to one another, adjust values accordingly -->
+		<fieldset id="search" style="width:56%; float:left; margin-right: 10px; margin-left: 30px"> <!-- to make two field float next to one another, adjust values accordingly -->
 			<label style="width:100%">Search</label>
 			<div id="1">
 				<select id="field1" style="width:23%;  margin-top: 2px">
@@ -18,12 +18,12 @@
 					<option value="<"><</option>
 				</select>
 				<a href="#" id="add" style="float:right; margin: 4px 8px 0 0"><img src="{{baseurl}}resources/admin/img/icons/plus_alt_16x16.png"></a>
-				<input id="filter_val1" type="text" style="width:49%;float:right" value="">
+				<div style="display: inline"><input id="filter_val1" type="text" style="width:43%;float:right" value=""></div>
 			</div>
 		</fieldset>
 		<fieldset style="width:35%; float:right; margin-right:20px"> <!-- to make two field float next to one another, adjust values accordingly -->
 			<label style="width:100%">Sort by</label>
-			<select id="sortby" style="width:55%;">
+			<select id="sortby" style="width:53%;">
 				<option value="name">Name</option>
 				<option value="lastlogin">Last login</option>
 				<option value="level">Level</option>
@@ -53,7 +53,7 @@
     				<th>Last login</th> 
     				<th>Level</th>  
     				<th>Group</th> 
-    				<th>Online</th> 
+    				<th>Flags</th> 
 				</tr> 
 			</thead> 
 			<tbody> 
@@ -74,9 +74,9 @@ $(document).ready(function () {
 
 		$('fieldset#search div').each(function(index) {
 			var id = $(this).attr('id');
-			if ($('input#filter_val'+id).val() != '')
+			if ($('#filter_val'+id).val() != '')
 			{
-				output += '&field'+id+'='+$('select#field'+id).val()+'&operator'+id+'='+$('select#operator'+id).val()+'&filter_val'+id+'='+$('input#filter_val'+id).val();
+				output += '&field'+id+'='+$('select#field'+id).val()+'&operator'+id+'='+$('select#operator'+id).val()+'&filter_val'+id+'='+$('#filter_val'+id).val();
 			}
 		});
 
@@ -101,27 +101,48 @@ $(document).ready(function () {
 				$('#sidebar').height($(document).height()-90);
 				$('#main').height($(document).height()-90);
 				$("#menu").css('margin-left', $(".tab_container").width()/2 - 106 - 9*data.max);
-				$("#menu").css('width', 210 + 14*data.max);
+				$("#menu").css('width', 210 + 12*data.max);
 				pages = data.max;
 			}
 		});
 	}
 
+	function groupsList(number, field)
+	{
+		$.ajax({
+			type: "POST",
+			url: "/adminactions/getgroupslist.json",
+			data: "number="+number,
+			async: false,
+    			dataType: "json",
+			success: function(data)
+			{
+				field.parent().html(data.select);
+			}
+		});
+	}	
+
 	loadData(1);
 
 	$('select[id^="field"]').live('change',function(){
 		var number = $(this).parent().attr('id');
+		$("#filter_val"+number).parent().html('<input id="filter_val'+number+'" type="text" style="width:43%;float:right" value="">');
+
 		if ($(this).val() == 'lastlogin')
 		{
-			var field = $("input#filter_val"+number+":first");
-			field.datepicker({
+			$(this).parent().find("#filter_val"+number+":first").datepicker({
 				dateFormat: 'd MM yy',
-				altField: field
+				altField: $(this).parent().find("#filter_val"+number+":first")
 			});
 		}
 		else
 		{
-			$(this).parent().find("input#filter_val"+number+":first").datepicker( "destroy" );
+			$(this).parent().find("#filter_val"+number+":first").datepicker( "destroy" );
+		}
+
+		if ($(this).val() == 'group')
+		{
+			 groupsList(number, $(this).parent().find("#filter_val"+number+":first"));
 		}
 	});
 
@@ -153,7 +174,7 @@ $(document).ready(function () {
 		{
 			filters_num += 1;
 			$('fieldset#search').append('<div id="'+filters_num+'"><select id="field'+filters_num+'" style="width:23%;  margin-top: 8px"><option value="name">Name</option><option value="account">Account</option><option value="lastlogin">Last login</option><option value="level">Level</option><option value="group">Group</option></select><select id="operator'+filters_num+'" style="width:10%;  margin-top: 8px"><option value="=">=</option>	<option value="!=">!=</option><option value=">">></option><option value="<"><</option></select>'+
-			'<a href="#" id="remove" style="float:right; margin: 10px 8px 0 0"><img src="{{baseurl}}resources/admin/img/icons/x_alt_16x16.png"></a><input id="filter_val'+filters_num+'" type="text" style="width:49%;float:right; margin-top:6px" value=""></div>');
+			'<a href="#" id="remove" style="float:right; margin: 10px 8px 0 0"><img src="{{baseurl}}resources/admin/img/icons/x_alt_16x16.png"></a><div style="display: inline"><input id="filter_val'+filters_num+'" type="text" style="width:43%;float:right; margin-top:6px" value=""></div></div>');
 		}
 	});
 });
