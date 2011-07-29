@@ -128,7 +128,15 @@ $(document).ready(function () {
 
 	$('select[id^="field"]').live('change',function(){
 		var number = $(this).parent().attr('id');
-		$("#filter_val"+number).parent().html('<input id="filter_val'+number+'" type="text" style="width:43%;float:right" value="">');
+
+                if (number == 1)
+                {
+		        $("#filter_val"+number).parent().html('<input id="filter_val'+number+'" class="filter_val" type="text" value="">');
+                }
+                else
+                {
+		        $("#filter_val"+number).parent().html('<input id="filter_val'+number+'" class="filter_val" type="text" style="margin-top:6px" value="">');
+                }
 
 		if ($(this).val() == 'lastlogin')
 		{

@@ -293,7 +293,7 @@ class Controller_Adminactions extends Controller_Rest {
         public function post_getgroupslist()
         {
                 $number = Input::post('number');
-                $output['select'] = '<select id="filter_val'.$number.'" style="width:45%;float:right;margin-top:2px">';
+                $output['select'] = '<select id="filter_val'.$number.'" style="width:31%;float:right;margin-top:6px">';
                 $groups = new OTS_Groups_List();
                 foreach ($groups as $group)
                 {
