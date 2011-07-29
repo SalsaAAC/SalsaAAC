@@ -980,5 +980,45 @@ html body section#main.column article.module div.tab_container fieldset select.c
 	position:absolute;
 	margin-top:100px;
 }
-
+fieldset#search.list_left{
+        width:63%; float:left; margin-right: 10px; margin-left: 30px;
+}
+fieldset#search.list_left label,
+fieldset.list_right label
+{
+        width:100%;
+}
+fieldset#search.list_left select.field{
+        width:22%;  margin-top: 2px;
+}
+fieldset#search.list_left select.operator{
+        width:10%;  margin-top: 2px; margin-left: 6px;
+}
+fieldset#search.list_left a.button{
+        float:right; margin: 4px 8px 0 0;
+}
+fieldset#search.list_left input.filter_val{
+        width:31%;float:right;
+}
+fieldset#search.list_left select.criterium{
+        width:12%;  margin-top: 8px;
+}
+fieldset.list_right{
+        width:28%; float:right; margin-right:20px;
+}
+fieldset.list_right select.sortby{
+        width:35%;
+}
+fieldset.list_right select.order{
+        width:35%; margin-bottom: 4px;
+}
+input#filters.alt_btn{
+        float:right; margin: 5px;
+}
+input#go{
+        float:right; margin: 5px; margin-right: 10px;
+}
+input#gopage{
+        float:right; margin: 5px; width:20px; height:18px;
+}
 
