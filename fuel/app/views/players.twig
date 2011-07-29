@@ -1,36 +1,36 @@
 {% extends "template.twig" %}
 
 {% block content %}
-		<fieldset id="search" style="width:63%; float:left; margin-right: 10px; margin-left: 30px"> <!-- to make two field float next to one another, adjust values accordingly -->
-			<label style="width:100%">Search</label>
+		<fieldset id="search" class="list_left"> <!-- to make two field float next to one another, adjust values accordingly -->
+			<label>Search</label>
 			<div id="1">
-                                <div style="width:12%; margin:0 10px; display: inline-block"></div>
+                                <div style="width:12%; margin:0 9px; display: inline-block"></div>
                         
-				<select id="field1" style="width:22%;  margin-top: 2px">
+				<select id="field1" class="field">
 					<option value="name">Name</option>
 					<option value="account">Account</option>
 					<option value="lastlogin">Last login</option>
 					<option value="level">Level</option>
 					<option value="group_id">Group</option>
 				</select>
-				<select id="operator1" style="width:10%;  margin-top: 2px">
+				<select id="operator1" class="operator">
 					<option value="=">=</option>
 					<option value="!=">!=</option>
 					<option value=">">></option>
 					<option value="<"><</option>
 				</select>
-				<a href="#" id="add" style="float:right; margin: 4px 8px 0 0"><img src="{{baseurl}}resources/admin/img/icons/plus_alt_16x16.png"></a>
-				<div style="display: inline"><input id="filter_val1" type="text" style="width:31%;float:right" value=""></div>
+				<a href="#" id="add" class="button"><img src="{{baseurl}}resources/admin/img/icons/plus_alt_16x16.png"></a>
+				<div style="display: inline"><input id="filter_val1" class="filter_val" type="text" value=""></div>
 			</div>
 		</fieldset>
-		<fieldset style="width:28%; float:right; margin-right:20px"> <!-- to make two field float next to one another, adjust values accordingly -->
-			<label style="width:100%">Sort by</label>
-			<select id="sortby" style="width:35%;">
+		<fieldset class="list_right"> <!-- to make two field float next to one another, adjust values accordingly -->
+			<label>Order by</label>
+			<select id="sortby" class="sortby">
 				<option value="name">Name</option>
 				<option value="lastlogin">Last login</option>
 				<option value="level">Level</option>
 			</select>
-			<select id="order" style="width:35%; margin-bottom: 4px">
+			<select id="order" class="order">
 				<option value="asc">Ascending</option>
 				<option value="desc">Descending</option>
 			</select>
@@ -40,9 +40,9 @@
 		<article class="module width_full">
 		<header>
 			<h3 class="tabs_involved">Players</h3>
-			<input class="alt_btn" type="submit" value="Apply filters" style="float:right; margin: 5px">
-			<input id="go" type="submit" value="Go" style="float:right; margin: 5px; margin-right: 10px">
-			<input id="gopage" type="text" style="float:right; margin: 5px; width:20px; height:18px">
+			<input id="filters" class="alt_btn" type="submit" value="Apply filters">
+			<input id="go" type="submit" value="Go">
+			<input id="gopage" type="text">
 			<div id="menu"></div>
 		</header>
 
@@ -125,7 +125,6 @@ $(document).ready(function () {
 	}	
 
 	loadData(1);
-        $('select#field1').css('margin-left', $('select#field1').parent()*0.12);
 
 	$('select[id^="field"]').live('change',function(){
 		var number = $(this).parent().attr('id');
@@ -176,8 +175,8 @@ $(document).ready(function () {
 		if (filters_num < 5)
 		{
 			filters_num += 1;
-			$('fieldset#search').append('<div id="'+filters_num+'"><select id="criterium'+filters_num+'" style="width:12%;  margin-top: 8px"><option value="AND">AND</option><option value="OR">OR</option></select><select id="field'+filters_num+'" style="width:22%;  margin-top: 8px"><option value="name">Name</option><option value="account">Account</option><option value="lastlogin">Last login</option><option value="level">Level</option><option value="group_id">Group</option></select><select id="operator'+filters_num+'" style="width:10%;  margin-top: 8px"><option value="=">=</option>	<option value="!=">!=</option><option value=">">></option><option value="<"><</option></select>'+
-			'<a href="#" id="remove" style="float:right; margin: 10px 8px 0 0"><img src="{{baseurl}}resources/admin/img/icons/x_alt_16x16.png"></a><div style="display: inline"><input id="filter_val'+filters_num+'" type="text" style="width:31%;float:right; margin-top:6px" value=""></div></div>');
+			$('fieldset#search').append('<div id="'+filters_num+'"><select id="criterium'+filters_num+'" class="criterium" style="margin-top: 8px"><option value="AND">AND</option><option value="OR">OR</option></select><select id="field'+filters_num+'" class="field" style="margin-top: 8px"><option value="name">Name</option><option value="account">Account</option><option value="lastlogin">Last login</option><option value="level">Level</option><option value="group_id">Group</option></select><select id="operator'+filters_num+'" class="operator" style="margin-top: 8px; margin-left: 9px"><option value="=">=</option>	<option value="!=">!=</option><option value=">">></option><option value="<"><</option></select>'+
+			'<a href="#" id="remove" class="button" style="margin: 10px 8px 0 0"><img src="{{baseurl}}resources/admin/img/icons/x_alt_16x16.png"></a><div style="display: inline"><input id="filter_val'+filters_num+'" class="filter_val" type="text" style="margin-top:6px" value=""></div></div>');
 		}
 	});
 });
