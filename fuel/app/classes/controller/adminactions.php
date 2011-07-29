@@ -231,17 +231,20 @@ class Controller_Adminactions extends Controller_Rest {
                         $where     = Input::post('field'.$i);
                         $where_op  = Input::post('operator'.$i);
                         $where_val = Input::post('filter_val'.$i);
+                        $criterium = Input::post('criterium'.$i);
                         if ( ! empty($where) AND ! empty($where_op) AND ! empty($where_val))
                         {
+                                $criterium = $criterium == 'OR' ? self::getPotConstant('OR') : self::getPotConstant('AND');
+
                                 $where_op = self::getPotConstant($where_op);
                                 if ($where == 'account')
                                 {
-                                        $filter->addFilter(new OTS_SQLField('name', 'accounts'), $where_val, $where_op);
+                                        $filter->addFilter(new OTS_SQLField('name', 'accounts'), $where_val, $where_op, $criterium);
                                 }
                                 else
                                 {
                                         if ($where == 'lastlogin') $where_val = strtotime($where_val);
-                                        $filter->addFilter(new OTS_SQLField($where), $where_val, $where_op);
+                                        $filter->addFilter(new OTS_SQLField($where), $where_val, $where_op, $criterium);
                                 }
                                 $filtered = true;
                         }
