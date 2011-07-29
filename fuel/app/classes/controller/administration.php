@@ -59,8 +59,10 @@ class Controller_Administration extends Controller_Admin {
 	public function action_dashboard()
 	{
 		\Config::load('salsa', true);
+		$ip   = \Config::get('salsa.otserv.ip', '127.0.0.1');
+		$port = \Config::get('salsa.otserv.port', 7171);
 	
-		$info = new OTS_ServerInfo(\Config::get('salsa.otserv.ip', '127.0.0.1'), \Config::get('salsa.otserv.port', 7171));
+		$info = new OTS_ServerInfo($ip, $port);
 		$status = $info->status();
 		if(!$status)
 		{
@@ -150,10 +152,16 @@ class Controller_Administration extends Controller_Admin {
 
 	public function action_name()
 	{
-		for ($i = 1; $i< 16; $i++)
+		// loads map file
+		$towns = new OTS_OTBMFile('/home/michal/trunk/data/world/map.otbm');
+		 
+		echo count($towns);
+		echo $towns->getDescription();
+
+		// lists towns
+		foreach($towns as $id => $name)
 		{
-			$n = rand(10e16, 10e20);
-			echo base_convert($n, 10, 36).'<br>';
+		    echo 'Town ID: ', $id, ', name: ', $name, "\n";
 		}
 	}		
 

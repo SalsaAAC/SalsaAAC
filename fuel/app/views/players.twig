@@ -9,7 +9,7 @@
 					<option value="account">Account</option>
 					<option value="lastlogin">Last login</option>
 					<option value="level">Level</option>
-					<option value="group">Group</option>
+					<option value="group_id">Group</option>
 				</select>
 				<select id="operator1" style="width:10%;  margin-top: 2px">
 					<option value="=">=</option>
@@ -90,7 +90,7 @@ $(document).ready(function () {
 		$.ajax({
 			type: "POST",
 			url: "/adminactions/getplayerslist.json",
-			data: "page="+page+"&sortby="+$('select#sortby').val()+"&order="+$('select#order').val()+getfilters()+'&filter_vals='+filters_num,
+			data: "page="+page+"&sortby="+$('select#sortby').val()+"&order="+$('select#order').val()+getfilters(),
 			async: false,
     			dataType: "json",
 			success: function(data)
@@ -140,9 +140,9 @@ $(document).ready(function () {
 			$(this).parent().find("#filter_val"+number+":first").datepicker( "destroy" );
 		}
 
-		if ($(this).val() == 'group')
+		if ($(this).val() == 'group_id')
 		{
-			 groupsList(number, $(this).parent().find("#filter_val"+number+":first"));
+			groupsList(number, $(this).parent().find("#filter_val"+number+":first"));
 		}
 	});
 
@@ -173,7 +173,7 @@ $(document).ready(function () {
 		if (filters_num < 5)
 		{
 			filters_num += 1;
-			$('fieldset#search').append('<div id="'+filters_num+'"><select id="field'+filters_num+'" style="width:23%;  margin-top: 8px"><option value="name">Name</option><option value="account">Account</option><option value="lastlogin">Last login</option><option value="level">Level</option><option value="group">Group</option></select><select id="operator'+filters_num+'" style="width:10%;  margin-top: 8px"><option value="=">=</option>	<option value="!=">!=</option><option value=">">></option><option value="<"><</option></select>'+
+			$('fieldset#search').append('<div id="'+filters_num+'"><select id="field'+filters_num+'" style="width:23%;  margin-top: 8px"><option value="name">Name</option><option value="account">Account</option><option value="lastlogin">Last login</option><option value="level">Level</option><option value="group_id">Group</option></select><select id="operator'+filters_num+'" style="width:10%;  margin-top: 8px"><option value="=">=</option>	<option value="!=">!=</option><option value=">">></option><option value="<"><</option></select>'+
 			'<a href="#" id="remove" style="float:right; margin: 10px 8px 0 0"><img src="{{baseurl}}resources/admin/img/icons/x_alt_16x16.png"></a><div style="display: inline"><input id="filter_val'+filters_num+'" type="text" style="width:43%;float:right; margin-top:6px" value=""></div></div>');
 		}
 	});
