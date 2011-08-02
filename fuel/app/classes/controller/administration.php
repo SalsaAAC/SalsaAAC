@@ -140,7 +140,6 @@ class Controller_Administration extends Controller_Admin {
 
 	public function action_players()
 	{
-		
 		$this->response->body = View::factory('players.twig', self::$theme_data);
 	}
 

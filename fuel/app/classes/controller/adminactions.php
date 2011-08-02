@@ -59,6 +59,7 @@ class Controller_Adminactions extends Controller_Rest {
                         'database' => \Config::get('db.otserv.connection.database', 'otserv'),
                 );
                 POT::connect(null, $config);
+                error_reporting(0);
         }
 
         public function post_saveconfigs()
@@ -225,6 +226,7 @@ class Controller_Adminactions extends Controller_Rest {
                 $data['message'] = '';
                 $players         = new OTS_Players_List();
                 $filter          = new OTS_SQLFilter();
+                $data['allpids'] = array();
 
                 for ($i = 1; $i < 6; $i++)
                 {
@@ -252,6 +254,11 @@ class Controller_Adminactions extends Controller_Rest {
                 if ($filtered) $players->setFilter($filter);
                 $players_num = count($players);
 
+                foreach ($players as $player)
+                {
+                        $data['allpids'][] = $player->getId();
+                }
+
                 $order = self::getPotConstant($order);
                 $players->orderBy(new OTS_SQLField($sort, 'players'), $order);
                 $players->setLimit($per_page);
@@ -275,7 +282,8 @@ class Controller_Adminactions extends Controller_Rest {
                                 if ($account->isBlocked()) $flags .= '<a href="/administration/ban/'.$account_ban->id.'"><img src="'.$baseurl.'resources/admin/img/icons/banned.png" alt="banned" title="Banned"></img></a>';
                                 if (empty($flags)) $flags = '-';
 
-                                $data['message'] .= '<tr><td><a href="/administration/player/'.$player->getId().'">'.$player->getName().'</a></td>
+                                $data['message'] .= '<tr><th><input type="checkbox" id="pid" pid="'.$player->getId().'"/></th>
+                                        <td><a href="/administration/player/'.$player->getId().'">'.$player->getName().'</a></td>
                                         <td><a href="/administration/account/'.$account->getId().'">'.$account->getName().'</a></td>
                                         <td>'.date("jS F Y", $player->getLastLogin()).'</td>
                                         <td>'.$player->getLevel().'</td>
@@ -293,7 +301,8 @@ class Controller_Adminactions extends Controller_Rest {
         public function post_getgroupslist()
         {
                 $number = Input::post('number');
-                $output['select'] = '<select id="filter_val'.$number.'" style="width:31%;float:right;margin-top:6px">';
+                $margin = $number == 1 ? ';margin-top:2px' : ';margin-top:6px';
+                $output['select'] = '<select id="filter_val'.$number.'" class="filter_val" style="width:31%'.$margin.'">';
                 $groups = new OTS_Groups_List();
                 foreach ($groups as $group)
                 {
